@@ -1,7 +1,5 @@
 package org.example.client;
 
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +10,6 @@ import java.net.Socket;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 public class CustomHttpClient {
 
     private final String IP = "localhost";
