@@ -12,4 +12,8 @@ import java.util.Map;
 public class HttpHeaders {
 
     private final Map<HttpHeader, String> headers;
+
+    public String getHeaderValue(HttpHeader header) {
+        return headers.get(header);
+    }
 }

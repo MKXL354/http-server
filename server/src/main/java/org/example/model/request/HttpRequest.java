@@ -13,5 +13,5 @@ public class HttpRequest {
 
     private final RequestLine requestLine;
     private final HttpHeaders headers;
-    private final HttpBody httpBody;
+    private final HttpBody body;
 }

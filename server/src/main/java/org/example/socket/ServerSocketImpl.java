@@ -1,18 +1,17 @@
 package org.example.socket;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-public class ServerImpl implements Server {
-    private final ServerSocket serverSocket;
+public class ServerSocketImpl implements ServerSocket {
+    private final java.net.ServerSocket serverSocket;
 
-    public ServerImpl(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
+    public ServerSocketImpl(int port) throws IOException {
+        serverSocket = new java.net.ServerSocket(port);
     }
 
     @Override

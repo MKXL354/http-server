@@ -13,5 +13,5 @@ public class HttpResponse {
 
     private final StatusLine statusLine;
     private final HttpHeaders headers;
-    private final HttpBody httpBody;
+    private final HttpBody body;
 }

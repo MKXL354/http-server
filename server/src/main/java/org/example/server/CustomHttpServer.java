@@ -2,50 +2,45 @@ package org.example.server;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import lombok.RequiredArgsConstructor;
+import org.example.model.request.HttpRequest;
+import org.example.processor.request.HttpRequestProcessor;
 import org.example.socket.ClientSocket;
-import org.example.socket.Server;
-import org.example.socket.ServerImpl;
+import org.example.socket.ServerSocket;
+import org.example.socket.ServerSocketImpl;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
 @Component
+@RequiredArgsConstructor
 public class CustomHttpServer {
 
     private final int PORT = 8080;
 
-    private Server server;
+    private ServerSocket serverSocket;
     private ClientSocket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+
+    private final HttpRequestProcessor httpRequestProcessor;
 
     @PostConstruct
     public void start() throws IOException {
-        server = new ServerImpl(PORT);
-        clientSocket = server.acceptConnection();
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        String greeting = in.readLine();
-        if ("hello server".equals(greeting)) {
-            out.println("hello client");
-        }
-        else {
-            out.println("unrecognised greeting");
-        }
+        serverSocket = new ServerSocketImpl(PORT);
+        clientSocket = serverSocket.acceptConnection();
+        HttpRequest httpRequest = httpRequestProcessor.processHttpRequest(clientSocket);
+        System.out.println(httpRequest);
     }
 
     @PreDestroy
     public void stop() throws IOException {
-        in.close();
-        out.close();
         clientSocket.close();
-        server.close();
+        serverSocket.close();
     }
 }
+//TODO: loop, multi-client, error handling and multi-threading
+//TODO: config based IP and PORT
+//TODO: @Bean instead of @Component for customization?
