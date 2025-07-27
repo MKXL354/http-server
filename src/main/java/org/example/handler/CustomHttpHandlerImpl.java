@@ -2,6 +2,7 @@ package org.example.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.exception.ApplicationRuntimeException;
 import org.example.model.request.HttpRequest;
 import org.example.processor.request.HttpRequestProcessor;
 import org.example.socket.ClientSocket;
@@ -25,8 +26,8 @@ public class CustomHttpHandlerImpl implements CustomHttpHandler {
         try {
             HttpRequest httpRequest = httpRequestProcessor.processHttpRequest(clientSocket);
             System.out.println(httpRequest);
-        } catch (IOException e) {
-            log.warn(e.getMessage());
+        } catch (ApplicationRuntimeException | IOException e) {
+            log.warn(e.toString());
         }
     }
 }

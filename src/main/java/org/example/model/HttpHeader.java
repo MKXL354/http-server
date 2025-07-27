@@ -11,7 +11,8 @@ public enum HttpHeader {
     USER_AGENT("User-Agent"),
     ACCEPT("Accept"),
     CONTENT_LENGTH("Content-Length"),
-    CONTENT_TYPE("Content-Type");
+    CONTENT_TYPE("Content-Type"),
+    CONNECTION("Connection");
 
     private final String value;
 

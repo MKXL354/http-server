@@ -1,3 +1,6 @@
+### TEMPORARY TESTING ###
+/src/main/java/org/example/client/
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

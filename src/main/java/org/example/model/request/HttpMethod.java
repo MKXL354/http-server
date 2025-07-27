@@ -1,5 +1,7 @@
 package org.example.model.request;
 
+import java.util.Arrays;
+
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
@@ -10,5 +12,9 @@ public enum HttpMethod {
     POST,
     PUT,
     PATCH,
-    DELETE
+    DELETE;
+
+    public static HttpMethod getByValue(String value) {
+        return Arrays.stream(HttpMethod.values()).filter(m -> m.toString().equals(value)).findFirst().orElse(null);
+    }
 }

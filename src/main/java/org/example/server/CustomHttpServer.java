@@ -39,7 +39,7 @@ public class CustomHttpServer {
             serverLoopExecutionManager.shutdown();
             customServerSocket.close();
         } catch (IOException e) {
-            log.warn(e.getMessage());
+            log.warn(e.toString());
         }
     }
 
@@ -49,14 +49,16 @@ public class CustomHttpServer {
                 ClientSocket clientSocket = customServerSocket.acceptConnection();
                 taskExecutionManager.execute(() -> customHttpHandler.handle(clientSocket));
             } catch (IOException e) {
-                log.warn(e.getMessage());
+                log.warn(e.toString());
             }
         }
     }
 }
-//TODO: error handling
-//TODO: business based on headers
 //TODO: create response and return just the request for now
-//TODO: routing and business (based on http methods, path and other data)
+//TODO: test infrastructure
+//TODO: enhanced error handling (send error response with message/trace not just log)
+//TODO: meaningful messages read from config encapsulated in exceptions?
+//TODO: server business (read body (length, chunked, json), block ip, etc.) based on headers
+//TODO: routing based on http methods, path and other data
 //TODO: config based IP and PORT
 //TODO: @Bean instead of @Component for customization? and auto-config

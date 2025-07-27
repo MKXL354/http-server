@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * @author Mehdi Kamali
@@ -11,10 +12,13 @@ import java.net.Socket;
  */
 public class ClientSocketImpl implements ClientSocket {
 
+    private final int SOCKET_TIMEOUT = 10000;
+
     private final Socket clientSocket;
 
-    public ClientSocketImpl(Socket clientSocket) {
+    public ClientSocketImpl(Socket clientSocket) throws SocketException {
         this.clientSocket = clientSocket;
+        clientSocket.setSoTimeout(SOCKET_TIMEOUT);
     }
 
     @Override
