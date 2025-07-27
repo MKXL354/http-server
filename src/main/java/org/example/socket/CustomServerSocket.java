@@ -6,7 +6,7 @@ import java.io.IOException;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-public interface ServerSocket {
+public interface CustomServerSocket {
 
     ClientSocket acceptConnection() throws IOException;
 
