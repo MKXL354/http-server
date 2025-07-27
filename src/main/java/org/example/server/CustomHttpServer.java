@@ -41,6 +41,10 @@ public class CustomHttpServer {
         serverSocket.close();
     }
 }
-//TODO: loop, multi-client, error handling and multi-threading
+//TODO: loop, multi-client, multi-threading
+//TODO: error handling
+//TODO: business based on headers
+//TODO: create response and return just the request for now
+//TODO: routing and business (based on http methods, path and other data)
 //TODO: config based IP and PORT
 //TODO: @Bean instead of @Component for customization?

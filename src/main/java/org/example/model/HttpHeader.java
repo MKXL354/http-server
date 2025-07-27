@@ -10,7 +10,8 @@ public enum HttpHeader {
     HOST("Host"),
     USER_AGENT("User-Agent"),
     ACCEPT("Accept"),
-    CONTENT_LENGTH("Content-Length");
+    CONTENT_LENGTH("Content-Length"),
+    CONTENT_TYPE("Content-Type");
 
     private final String value;
 
