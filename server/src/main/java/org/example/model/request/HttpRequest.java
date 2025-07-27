@@ -1,6 +1,8 @@
-package org.example.request;
+package org.example.model.request;
 
 import lombok.Data;
+import org.example.model.HttpBody;
+import org.example.model.HttpHeaders;
 
 /**
  * @author Mehdi Kamali

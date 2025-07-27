@@ -1,6 +1,7 @@
-package org.example.request;
+package org.example.model.request;
 
 import lombok.Data;
+import org.example.model.HttpVersion;
 
 /**
  * @author Mehdi Kamali

@@ -1,4 +1,4 @@
-package org.example.request;
+package org.example.model;
 
 import java.util.Arrays;
 
@@ -7,6 +7,7 @@ import java.util.Arrays;
  * @since 27/07/2025
  */
 public enum HttpVersion {
+
     HTTP1("HTTP/1.0"),
     HTTP1_1("HTTP/1.1"),
     HTTP2("HTTP/2"),
@@ -22,7 +23,7 @@ public enum HttpVersion {
         return value;
     }
 
-    public HttpVersion getByValue(String value) {
+    public static HttpVersion getByValue(String value) {
         return Arrays.stream(HttpVersion.values()).filter(v -> v.value.equals(value)).findFirst().orElse(null);
     }
 }
