@@ -1,7 +1,8 @@
 package org.example.model.response;
 
 import lombok.Data;
-import org.example.model.HttpVersion;
+import org.example.model.enumeration.HttpResponseStatus;
+import org.example.model.enumeration.HttpVersion;
 
 /**
  * @author Mehdi Kamali

@@ -1,0 +1,15 @@
+package org.example.processor.response;
+
+import org.example.model.response.HttpResponse;
+import org.example.socket.ClientSocket;
+
+import java.io.IOException;
+
+/**
+ * @author Mehdi Kamali
+ * @since 27/07/2025
+ */
+public interface HttpResponseWriter {
+
+    void writeHttpResponse(HttpResponse httpResponse, ClientSocket clientSocket) throws IOException;
+}

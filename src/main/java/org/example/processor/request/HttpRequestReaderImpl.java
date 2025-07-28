@@ -2,10 +2,10 @@ package org.example.processor.request;
 
 import org.example.exception.MalformedHttpRequestException;
 import org.example.model.HttpBody;
-import org.example.model.HttpHeader;
 import org.example.model.HttpHeaders;
-import org.example.model.HttpVersion;
-import org.example.model.request.HttpMethod;
+import org.example.model.enumeration.HttpHeader;
+import org.example.model.enumeration.HttpMethod;
+import org.example.model.enumeration.HttpVersion;
 import org.example.model.request.HttpRequest;
 import org.example.model.request.RequestLine;
 import org.example.model.request.RequestPath;
@@ -24,20 +24,20 @@ import java.util.Map;
  * @since 27/07/2025
  */
 @Component
-public class HttpRequestProcessorImpl implements HttpRequestProcessor {
+public class HttpRequestReaderImpl implements HttpRequestReader {
 
     private final int MAX_CONTENT_LENGTH = 65536;
 
     @Override
-    public HttpRequest processHttpRequest(ClientSocket clientSocket) throws IOException {
+    public HttpRequest readHttpRequest(ClientSocket clientSocket) throws IOException {
         BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        RequestLine requestLine = processRequestLine(input);
-        HttpHeaders headers = processHttpHeaders(input);
-        HttpBody body = processHttpBody(headers, input);
+        RequestLine requestLine = readRequestLine(input);
+        HttpHeaders headers = readHttpHeaders(input);
+        HttpBody body = readHttpBody(headers, input);
         return new HttpRequest(requestLine, headers, body);
     }
 
-    private RequestLine processRequestLine(BufferedReader input) throws IOException {
+    private RequestLine readRequestLine(BufferedReader input) throws IOException {
         String line = input.readLine();
         if (!StringUtils.hasText(line)) {
             throw new MalformedHttpRequestException();
@@ -51,14 +51,14 @@ public class HttpRequestProcessorImpl implements HttpRequestProcessor {
             throw new MalformedHttpRequestException();
         }
         RequestPath path = new RequestPath(sections[1]);
-        HttpVersion version = HttpVersion.getByValue(sections[2]);
+        HttpVersion version = HttpVersion.getByLabel(sections[2]);
         if (version == null) {
             throw new MalformedHttpRequestException();
         }
         return new RequestLine(method, path, version);
     }
 
-    private HttpHeaders processHttpHeaders(BufferedReader input) throws IOException {
+    private HttpHeaders readHttpHeaders(BufferedReader input) throws IOException {
         String line;
         Map<HttpHeader, String> headers = new HashMap<>();
         while ((line = input.readLine()) != null && !line.isBlank()) {
@@ -79,7 +79,7 @@ public class HttpRequestProcessorImpl implements HttpRequestProcessor {
         return new HttpHeaders(headers);
     }
 
-    private HttpBody processHttpBody(HttpHeaders headers, BufferedReader input) throws IOException {
+    private HttpBody readHttpBody(HttpHeaders headers, BufferedReader input) throws IOException {
         String contentLengthValue = headers.getHeaderValue(HttpHeader.CONTENT_LENGTH);
         if (contentLengthValue != null) {
             try {

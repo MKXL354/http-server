@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.executor.ServerLoopExecutionManager;
 import org.example.executor.TaskExecutionManager;
-import org.example.handler.CustomHttpHandler;
+import org.example.handler.HttpHandler;
 import org.example.socket.ClientSocket;
-import org.example.socket.CustomServerSocket;
+import org.example.socket.ServerSocket;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,12 +20,12 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CustomHttpServer {
+public class HttpServer {
 
     private final ServerLoopExecutionManager serverLoopExecutionManager;
     private final TaskExecutionManager taskExecutionManager;
-    private final CustomServerSocket customServerSocket;
-    private final CustomHttpHandler customHttpHandler;
+    private final ServerSocket serverSocket;
+    private final HttpHandler httpHandler;
 
     @PostConstruct
     public void start() {
@@ -37,7 +37,7 @@ public class CustomHttpServer {
         try {
             taskExecutionManager.shutdown();
             serverLoopExecutionManager.shutdown();
-            customServerSocket.close();
+            serverSocket.close();
         } catch (IOException e) {
             log.warn(e.toString());
         }
@@ -46,19 +46,16 @@ public class CustomHttpServer {
     private void serverLoop() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                ClientSocket clientSocket = customServerSocket.acceptConnection();
-                taskExecutionManager.execute(() -> customHttpHandler.handle(clientSocket));
+                ClientSocket clientSocket = serverSocket.acceptConnection();
+                taskExecutionManager.execute(() -> httpHandler.handle(clientSocket));
             } catch (IOException e) {
                 log.warn(e.toString());
             }
         }
     }
 }
-//TODO: create response and return just the request for now
 //TODO: test infrastructure
 //TODO: enhanced error handling (send error response with message/trace not just log)
-//TODO: meaningful messages read from config encapsulated in exceptions?
-//TODO: server business (read body (length, chunked, json), block ip, etc.) based on headers
-//TODO: routing based on http methods, path and other data
-//TODO: config based IP and PORT
-//TODO: @Bean instead of @Component for customization? and auto-config
+//TODO: config based data variables (IP, PORT, TIMEOUT, etc.) put in Beans
+//TODO: @Bean (with naming to avoid dupe) instead of @Component for customization? and auto-config
+//TODO: filter chain?

@@ -1,4 +1,6 @@
-package org.example.model;
+package org.example.model.enumeration;
+
+import lombok.Getter;
 
 import java.util.Arrays;
 
@@ -6,7 +8,9 @@ import java.util.Arrays;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
+@Getter
 public enum HttpHeader {
+
     HOST("Host"),
     USER_AGENT("User-Agent"),
     ACCEPT("Accept"),
@@ -18,10 +22,6 @@ public enum HttpHeader {
 
     HttpHeader(String value) {
         this.value = value;
-    }
-
-    public String getValue() {
-        return value;
     }
 
     public static HttpHeader getByValue(String value) {

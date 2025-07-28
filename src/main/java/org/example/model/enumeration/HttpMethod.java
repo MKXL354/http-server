@@ -1,4 +1,4 @@
-package org.example.model.request;
+package org.example.model.enumeration;
 
 import java.util.Arrays;
 

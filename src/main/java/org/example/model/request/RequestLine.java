@@ -1,7 +1,8 @@
 package org.example.model.request;
 
 import lombok.Data;
-import org.example.model.HttpVersion;
+import org.example.model.enumeration.HttpMethod;
+import org.example.model.enumeration.HttpVersion;
 
 /**
  * @author Mehdi Kamali
@@ -11,6 +12,6 @@ import org.example.model.HttpVersion;
 public class RequestLine {
 
     private final HttpMethod httpMethod;
-    private final RequestPath path;
+    private final RequestPath requestPath;
     private final HttpVersion httpVersion;
 }

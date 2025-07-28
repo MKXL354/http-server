@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
@@ -13,15 +12,15 @@ import java.net.Socket;
  */
 @Component
 @Slf4j
-public class CustomServerSocketImpl implements CustomServerSocket {
+public class ServerSocketImpl implements ServerSocket {
 
     private final int PORT = 8080;
 
-    private final ServerSocket serverSocket;
+    private final java.net.ServerSocket serverSocket;
 
-    public CustomServerSocketImpl() {
+    public ServerSocketImpl() {
         try {
-            serverSocket = new ServerSocket(PORT);
+            serverSocket = new java.net.ServerSocket(PORT);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

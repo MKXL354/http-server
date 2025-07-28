@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-public interface HttpRequestProcessor {
+public interface HttpRequestReader {
 
-    HttpRequest processHttpRequest(ClientSocket clientSocket) throws IOException;
+    HttpRequest readHttpRequest(ClientSocket clientSocket) throws IOException;
 }
