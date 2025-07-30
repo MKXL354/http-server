@@ -16,8 +16,6 @@ import org.springframework.util.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Mehdi Kamali
@@ -60,23 +58,23 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
 
     private HttpHeaders readHttpHeaders(BufferedReader input) throws IOException {
         String line;
-        Map<HttpHeader, String> headers = new HashMap<>();
+        HttpHeaders headers = new HttpHeaders();
         while ((line = input.readLine()) != null && !line.isBlank()) {
             int colonIndex = line.indexOf(":");
             if (colonIndex == -1) {
                 throw new MalformedHttpRequestException();
             }
             HttpHeader key = HttpHeader.getByValue(line.substring(0, colonIndex).trim());
-            if (key == null || headers.containsKey(key)) {
+            if (key == null || headers.getHeaderValue(key) != null) {
                 throw new MalformedHttpRequestException();
             }
             String value = line.substring(colonIndex + 1).trim();
             if (value.isEmpty()) {
                 throw new MalformedHttpRequestException();
             }
-            headers.put(key, value);
+            headers.addHeader(key, value);
         }
-        return new HttpHeaders(headers);
+        return headers;
     }
 
     private HttpBody readHttpBody(HttpHeaders headers, BufferedReader input) throws IOException {

@@ -3,8 +3,8 @@ package org.example.routing;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.annotation.Routing;
 import org.example.exception.ApplicationRuntimeException;
-import org.example.routing.annotation.Routing;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -90,7 +90,7 @@ public class RoutingScannerImpl implements RoutingScanner {
                 if (method.isAnnotationPresent(Routing.class)) {
                     Routing request = method.getAnnotation(Routing.class);
                     Object instance = applicationContext.getBean(clazz);
-                    routingRegistry.register(request.httpMethod(), request.path(), new HandlerMethod(instance, method));
+                    routingRegistry.register(request.httpMethod(), request.path(), new ProcessorMethod(instance, method));
                 }
             }
         } catch (ClassNotFoundException e) {

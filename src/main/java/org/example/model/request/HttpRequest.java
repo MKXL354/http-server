@@ -1,6 +1,8 @@
 package org.example.model.request;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 import org.example.model.HttpBody;
 import org.example.model.HttpHeaders;
 
@@ -8,10 +10,12 @@ import org.example.model.HttpHeaders;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Data
+@AllArgsConstructor
+@Getter
+@ToString
 public class HttpRequest {
 
-    private final RequestLine requestLine;
-    private final HttpHeaders headers;
-    private final HttpBody body;
+    private RequestLine requestLine;
+    private HttpHeaders headers;
+    private HttpBody body;
 }

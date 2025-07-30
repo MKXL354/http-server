@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
  * @since 27/07/2025
  */
 @Data
-public class HandlerMethod {
+public class ProcessorMethod {
 
     private final Object instance;
     private final Method method;

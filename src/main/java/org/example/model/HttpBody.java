@@ -1,5 +1,6 @@
 package org.example.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -7,7 +8,8 @@ import lombok.Data;
  * @since 27/07/2025
  */
 @Data
+@AllArgsConstructor
 public class HttpBody {
 
-    private final String body;
+    private String bodyString;
 }

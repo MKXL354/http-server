@@ -22,4 +22,3 @@ public class MalformedHttpRequestException extends ApplicationRuntimeException {
         super(message, cause);
     }
 }
-//TODO: meaningful messages read from config encapsulated in exceptions?

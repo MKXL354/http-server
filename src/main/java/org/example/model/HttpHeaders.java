@@ -1,9 +1,10 @@
 package org.example.model;
 
 import lombok.Data;
+import lombok.Getter;
 import org.example.model.enumeration.HttpHeader;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,10 +14,11 @@ import java.util.Map;
 @Data
 public class HttpHeaders {
 
-    private final Map<HttpHeader, String> headerMap;
+    @Getter
+    private Map<HttpHeader, String> headerMap = new HashMap<>();
 
-    public HttpHeaders(Map<HttpHeader, String> headerMap) {
-        this.headerMap = Collections.unmodifiableMap(headerMap);
+    public void addHeader(HttpHeader header, String value) {
+        headerMap.put(header, value);
     }
 
     public String getHeaderValue(HttpHeader header) {

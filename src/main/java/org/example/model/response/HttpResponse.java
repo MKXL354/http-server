@@ -1,6 +1,9 @@
 package org.example.model.response;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Setter;
 import org.example.model.HttpBody;
 import org.example.model.HttpHeaders;
 
@@ -9,9 +12,11 @@ import org.example.model.HttpHeaders;
  * @since 27/07/2025
  */
 @Data
+@AllArgsConstructor
 public class HttpResponse {
 
-    private final StatusLine statusLine;
-    private final HttpHeaders headers;
-    private final HttpBody body;
+    private StatusLine statusLine;
+    @Setter(AccessLevel.NONE)
+    private HttpHeaders headers;
+    private HttpBody body;
 }

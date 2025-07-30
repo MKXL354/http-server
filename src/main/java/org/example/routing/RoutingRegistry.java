@@ -8,7 +8,7 @@ import org.example.model.enumeration.HttpMethod;
  */
 public interface RoutingRegistry {
 
-    void register(HttpMethod method, String path, HandlerMethod handlerMethod);
+    void register(HttpMethod method, String path, ProcessorMethod processorMethod);
 
-    HandlerMethod getHandler(HttpMethod method, String path);
+    ProcessorMethod getHandler(HttpMethod method, String path);
 }
