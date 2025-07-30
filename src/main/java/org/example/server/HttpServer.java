@@ -39,7 +39,7 @@ public class HttpServer {
             serverLoopExecutionManager.shutdown();
             serverSocket.close();
         } catch (IOException e) {
-            log.warn(e.getMessage(), e);
+            log.warn("could not shut down executors and close server", e);
         }
     }
 
@@ -47,6 +47,7 @@ public class HttpServer {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 ClientSocket clientSocket = serverSocket.acceptConnection();
+                log.info("client socket opened: {}", clientSocket);
                 taskExecutionManager.execute(() -> httpHandlerTemplate.handle(clientSocket));
             } catch (IOException e) {
                 log.warn(e.getMessage(), e);
@@ -56,7 +57,6 @@ public class HttpServer {
 }
 
 //TODO: enhanced error handling (send error response with message/trace not just log)
-//TODO: add more detailed exceptions (maybe one per logic class?)
 //TODO: query param (better request line parsing) support
 //TODO: util (like json?)
 //TODO: test infrastructure

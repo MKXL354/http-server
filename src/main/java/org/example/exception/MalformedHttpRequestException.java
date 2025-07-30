@@ -1,10 +1,12 @@
 package org.example.exception;
 
+import org.example.exception.base.ApplicationException;
+
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-public class MalformedHttpRequestException extends ApplicationRuntimeException {
+public class MalformedHttpRequestException extends ApplicationException {
 
     public MalformedHttpRequestException() {
         super();

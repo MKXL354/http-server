@@ -1,6 +1,6 @@
 package org.example.routing.validation;
 
-import org.example.exception.ApplicationRuntimeException;
+import org.example.exception.ProcessorMethodInvalidFormatException;
 import org.example.model.request.HttpRequest;
 import org.example.model.response.HttpResponse;
 import org.example.routing.ProcessorMethod;
@@ -21,8 +21,7 @@ public class FullControlProcessorValidator implements ProcessorValidator {
     @Override
     public void checkIsValid(ProcessorMethod processorMethod) {
         if (!isValid(processorMethod)) {
-//            TODO: add business exception
-            throw new ApplicationRuntimeException("processor method does not follow structure " + PROCESSOR_METHOD_STRUCTURE);
+            throw new ProcessorMethodInvalidFormatException("processor method does not follow structure " + PROCESSOR_METHOD_STRUCTURE);
         }
     }
 

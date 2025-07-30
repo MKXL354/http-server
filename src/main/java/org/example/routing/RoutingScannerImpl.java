@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotation.Routing;
-import org.example.exception.ApplicationRuntimeException;
+import org.example.exception.ProcessorRegistrarException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class RoutingScannerImpl implements RoutingScanner {
         try {
             Enumeration<URL> resources = classLoader.getResources(path);
             if (!resources.hasMoreElements()) {
-                throw new ApplicationRuntimeException("failed to find package path " + BASE_PACKAGE);
+                throw new ProcessorRegistrarException("failed to find package path " + BASE_PACKAGE);
             }
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
@@ -53,7 +53,7 @@ public class RoutingScannerImpl implements RoutingScanner {
                 }
             }
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("failed to scan and register processors", e);
+            throw new ProcessorRegistrarException("failed to scan and register processors", e);
         }
     }
 
@@ -94,7 +94,7 @@ public class RoutingScannerImpl implements RoutingScanner {
                 }
             }
         } catch (ClassNotFoundException e) {
-            throw new ApplicationRuntimeException("failed to inspect processor classes", e);
+            throw new ProcessorRegistrarException("failed to inspect processor class", e);
         }
     }
 }

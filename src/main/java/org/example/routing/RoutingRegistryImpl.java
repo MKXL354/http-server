@@ -1,7 +1,7 @@
 package org.example.routing;
 
 import lombok.RequiredArgsConstructor;
-import org.example.exception.ApplicationRuntimeException;
+import org.example.exception.DuplicateProcessorRegisteredException;
 import org.example.model.enumeration.HttpMethod;
 import org.example.routing.validation.ProcessorValidator;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class RoutingRegistryImpl implements RoutingRegistry {
     public void register(HttpMethod method, String path, ProcessorMethod processorMethod) {
         String routingKey = generateKey(method, path);
         if (routeMap.containsKey(routingKey)) {
-            throw new ApplicationRuntimeException("duplicated routing processor registered for: " + routingKey);
+            throw new DuplicateProcessorRegisteredException("duplicated routing processor registered for: " + routingKey);
         }
         processorValidator.checkIsValid(processorMethod);
         routeMap.put(routingKey, processorMethod);

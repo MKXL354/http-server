@@ -1,10 +1,12 @@
 package org.example.handler;
 
+import org.example.exception.ProcessorMethodNotFoundException;
 import org.example.io.request.HttpRequestReader;
 import org.example.io.response.HttpResponseWriter;
 import org.example.model.HttpHeaders;
 import org.example.model.enumeration.HttpResponseStatus;
 import org.example.model.request.HttpRequest;
+import org.example.model.request.RequestLine;
 import org.example.model.response.HttpResponse;
 import org.example.model.response.StatusLine;
 import org.example.routing.ProcessorMethod;
@@ -27,10 +29,14 @@ public class FullControlHttpHandler extends HttpHandlerTemplate {
 
     @Override
     public HttpResponse getHttpResponse(HttpRequest httpRequest) throws Exception {
-        ProcessorMethod processorMethod = routingRegistry.getHandler(httpRequest.getRequestLine().getHttpMethod(),
-                httpRequest.getRequestLine().getRequestPath().getPath());
-        StatusLine statusLine = new StatusLine(httpRequest.getRequestLine().getHttpVersion(), HttpResponseStatus.OK);
+        RequestLine requestLine = httpRequest.getRequestLine();
+        ProcessorMethod processorMethod = routingRegistry.getHandler(requestLine.getHttpMethod(),
+                requestLine.getRequestPath().getPath());
+        StatusLine statusLine = new StatusLine(requestLine.getHttpVersion(), HttpResponseStatus.OK);
         HttpResponse httpResponse = new HttpResponse(statusLine, new HttpHeaders(), null);
+        if (processorMethod == null) {
+            throw new ProcessorMethodNotFoundException();
+        }
         processorMethod.invoke(httpRequest, httpResponse);
         return httpResponse;
     }

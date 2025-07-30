@@ -1,5 +1,6 @@
 package org.example.io.request;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.exception.MalformedHttpRequestException;
 import org.example.model.HttpBody;
 import org.example.model.HttpHeaders;
@@ -22,12 +23,13 @@ import java.io.InputStreamReader;
  * @since 27/07/2025
  */
 @Component
+@Slf4j
 public class HttpRequestReaderImpl implements HttpRequestReader {
 
     private final int MAX_CONTENT_LENGTH = 65536;
 
     @Override
-    public HttpRequest readHttpRequest(ClientSocket clientSocket) throws IOException {
+    public HttpRequest readHttpRequest(ClientSocket clientSocket) throws MalformedHttpRequestException, IOException {
         BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         RequestLine requestLine = readRequestLine(input);
         if (requestLine == null) {
@@ -38,9 +40,10 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         return new HttpRequest(requestLine, headers, body);
     }
 
-    private RequestLine readRequestLine(BufferedReader input) throws IOException {
+    private RequestLine readRequestLine(BufferedReader input) throws MalformedHttpRequestException, IOException {
         String line = input.readLine();
         if (line == null) {
+            log.info("EOF reached");
             return null;
         }
         if (!StringUtils.hasText(line)) {
@@ -62,7 +65,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         return new RequestLine(method, path, version);
     }
 
-    private HttpHeaders readHttpHeaders(BufferedReader input) throws IOException {
+    private HttpHeaders readHttpHeaders(BufferedReader input) throws MalformedHttpRequestException, IOException {
         String line;
         HttpHeaders headers = new HttpHeaders();
         while ((line = input.readLine()) != null && !line.isBlank()) {
@@ -86,7 +89,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         return headers;
     }
 
-    private HttpBody readHttpBody(HttpHeaders headers, BufferedReader input) throws IOException {
+    private HttpBody readHttpBody(HttpHeaders headers, BufferedReader input) throws MalformedHttpRequestException, IOException {
         String contentLengthValue = headers.getHeaderValue(HttpHeader.CONTENT_LENGTH);
         if (contentLengthValue != null) {
             try {

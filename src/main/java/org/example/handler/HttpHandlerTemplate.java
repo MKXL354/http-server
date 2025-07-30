@@ -34,11 +34,8 @@ public abstract class HttpHandlerTemplate {
                 log.info(httpRequest.toString());
                 HttpResponse httpResponse = getHttpResponse(httpRequest);
                 boolean keepConnectionOpen = isConnectionHeaderKeptAlive(httpRequest);
-                if (keepConnectionOpen) {
-                    httpResponse.getHeaders().addHeader(HttpHeader.CONNECTION, HttpConnection.KEEP_ALIVE.getValue());
-                } else {
-                    httpResponse.getHeaders().addHeader(HttpHeader.CONNECTION, HttpConnection.CLOSE.getValue());
-                }
+                httpResponse.getHeaders().addHeader(HttpHeader.CONNECTION,
+                        keepConnectionOpen ? HttpConnection.KEEP_ALIVE.getValue() : HttpConnection.CLOSE.getValue());
                 httpResponseWriter.writeHttpResponse(httpResponse, clientSocket);
                 if (!keepConnectionOpen) {
                     break;

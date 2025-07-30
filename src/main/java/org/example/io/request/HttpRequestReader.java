@@ -1,5 +1,6 @@
 package org.example.io.request;
 
+import org.example.exception.MalformedHttpRequestException;
 import org.example.model.request.HttpRequest;
 import org.example.socket.ClientSocket;
 
@@ -11,5 +12,5 @@ import java.io.IOException;
  */
 public interface HttpRequestReader {
 
-    HttpRequest readHttpRequest(ClientSocket clientSocket) throws IOException;
+    HttpRequest readHttpRequest(ClientSocket clientSocket) throws MalformedHttpRequestException, IOException;
 }
