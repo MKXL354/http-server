@@ -30,6 +30,9 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
     public HttpRequest readHttpRequest(ClientSocket clientSocket) throws IOException {
         BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         RequestLine requestLine = readRequestLine(input);
+        if (requestLine == null) {
+            return null;
+        }
         HttpHeaders headers = readHttpHeaders(input);
         HttpBody body = readHttpBody(headers, input);
         return new HttpRequest(requestLine, headers, body);
@@ -37,6 +40,9 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
 
     private RequestLine readRequestLine(BufferedReader input) throws IOException {
         String line = input.readLine();
+        if (line == null) {
+            return null;
+        }
         if (!StringUtils.hasText(line)) {
             throw new MalformedHttpRequestException();
         }
@@ -65,7 +71,10 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
                 throw new MalformedHttpRequestException();
             }
             HttpHeader key = HttpHeader.getByValue(line.substring(0, colonIndex).trim());
-            if (key == null || headers.getHeaderValue(key) != null) {
+            if (key == null) {
+                continue;
+            }
+            if (headers.getHeaderValue(key) != null) {
                 throw new MalformedHttpRequestException();
             }
             String value = line.substring(colonIndex + 1).trim();

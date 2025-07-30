@@ -12,7 +12,7 @@ import java.net.SocketException;
  */
 public class ClientSocketImpl implements ClientSocket {
 
-    private final int SOCKET_TIMEOUT = 10000;
+    private final int SOCKET_TIMEOUT = 15000;
 
     private final Socket clientSocket;
 

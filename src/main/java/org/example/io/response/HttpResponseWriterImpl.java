@@ -35,14 +35,17 @@ public class HttpResponseWriterImpl implements HttpResponseWriter {
         responseToWrite.append(statusLineString).append(LINE_SEPARATOR);
 
         HttpBody body = response.getBody();
+        String bodyToWrite = "";
         if (body != null && StringUtils.hasText(body.getBodyString())) {
-            String bodyString = body.getBodyString();
-            response.getHeaders().addHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(bodyString.getBytes(StandardCharsets.UTF_8).length));
-            response.getHeaders().getHeaderMap().forEach((key, value) ->
-                    responseToWrite.append(key.getValue()).append(HEADER_SEPARATOR).append(value).append(LINE_SEPARATOR));
-            responseToWrite.append(LINE_SEPARATOR);
-            responseToWrite.append(body.getBodyString());
+            response.getHeaders().addHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(body.getBodyString().getBytes(StandardCharsets.UTF_8).length));
+            bodyToWrite = body.getBodyString();
+        } else {
+            response.getHeaders().addHeader(HttpHeader.CONTENT_LENGTH, "0");
         }
+        response.getHeaders().getHeaderMap().forEach((key, value) ->
+                responseToWrite.append(key.getValue()).append(HEADER_SEPARATOR).append(value).append(LINE_SEPARATOR));
+        responseToWrite.append(LINE_SEPARATOR);
+        responseToWrite.append(bodyToWrite);
 
         log.info(response.toString());
         writer.write(responseToWrite.toString());

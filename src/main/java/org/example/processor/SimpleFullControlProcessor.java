@@ -12,15 +12,23 @@ import org.springframework.stereotype.Component;
  * @since 27/07/2025
  */
 @Component
-public class FullControlProcessor {
+public class SimpleFullControlProcessor {
 
     @Routing(httpMethod = HttpMethod.GET, path = "/")
-    public void getSimpleHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         httpResponse.setBody(new HttpBody(httpRequest.toString()));
     }
 
     @Routing(httpMethod = HttpMethod.POST, path = "/")
-    public void postSimpleHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public void processSimplePost(HttpRequest httpRequest, HttpResponse httpResponse) {
         httpResponse.setBody(new HttpBody(httpRequest.toString()));
+    }
+
+    @Routing(httpMethod = HttpMethod.DELETE, path = "/")
+    public void processSimpleDelete(HttpRequest httpRequest, HttpResponse httpResponse) {
+    }
+
+    @Routing(httpMethod = HttpMethod.GET, path = "/favicon.ico")
+    public void processGetFavIcon(HttpRequest httpRequest, HttpResponse httpResponse) {
     }
 }
