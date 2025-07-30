@@ -44,9 +44,9 @@ public class HttpHandlerImpl implements HttpHandler {
             log.info(httpResponse.toString());
             httpResponseWriter.writeHttpResponse(httpResponse, clientSocket);
         } catch (ApplicationRuntimeException | IOException e) {
-            log.warn(e.toString());
+            log.warn(e.getMessage(), e);
         } catch (Exception e) {
-            log.warn(e.toString());
+            log.warn(e.getMessage(), e);
         }
     }
 

@@ -39,7 +39,7 @@ public class HttpServer {
             serverLoopExecutionManager.shutdown();
             serverSocket.close();
         } catch (IOException e) {
-            log.warn(e.toString());
+            log.warn(e.getMessage(), e);
         }
     }
 
@@ -49,7 +49,7 @@ public class HttpServer {
                 ClientSocket clientSocket = serverSocket.acceptConnection();
                 taskExecutionManager.execute(() -> httpHandler.handle(clientSocket));
             } catch (IOException e) {
-                log.warn(e.toString());
+                log.warn(e.getMessage(), e);
             }
         }
     }
