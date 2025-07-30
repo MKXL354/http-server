@@ -1,4 +1,4 @@
-package org.example.processor.request;
+package org.example.io.request;
 
 import org.example.model.request.HttpRequest;
 import org.example.socket.ClientSocket;

@@ -1,4 +1,4 @@
-package org.example.requestMapping;
+package org.example.routing;
 
 import org.example.model.enumeration.HttpMethod;
 

@@ -1,14 +1,16 @@
-package org.example.controller;
+package org.example.processor;
 
 import org.example.model.enumeration.HttpMethod;
 import org.example.model.request.HttpRequest;
-import org.example.requestMapping.annotation.Routing;
+import org.example.routing.annotation.Routing;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-public class SimpleController {
+@Component
+public class SimpleProcessor {
 
     @Routing(httpMethod = HttpMethod.GET, path = "/")
     public String getSimpleHttpResponse(HttpRequest httpRequest) {

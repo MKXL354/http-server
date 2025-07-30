@@ -1,4 +1,4 @@
-package org.example.requestMapping;
+package org.example.routing;
 
 import lombok.Data;
 

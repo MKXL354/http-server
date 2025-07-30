@@ -1,4 +1,4 @@
-package org.example.processor.response;
+package org.example.io.response;
 
 import org.example.model.HttpBody;
 import org.example.model.enumeration.HttpHeader;

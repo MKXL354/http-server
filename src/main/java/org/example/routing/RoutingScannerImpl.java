@@ -1,4 +1,4 @@
-package org.example.requestMapping;
+package org.example.routing;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
@@ -6,7 +6,8 @@ import io.github.classgraph.ScanResult;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.exception.ApplicationRuntimeException;
-import org.example.requestMapping.annotation.Routing;
+import org.example.routing.annotation.Routing;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -19,8 +20,9 @@ import java.lang.reflect.Method;
 @RequiredArgsConstructor
 public class RoutingScannerImpl implements RoutingScanner {
 
-    private final String BASE_PACKAGE = "org.example.controller";
+    private final String BASE_PACKAGE = "org.example.processor";
 
+    private final ApplicationContext applicationContext;
     private final RoutingRegistry routingRegistry;
 
     @PostConstruct
@@ -34,7 +36,8 @@ public class RoutingScannerImpl implements RoutingScanner {
                     if (method.isAnnotationPresent(Routing.class)) {
                         Routing request = method.getAnnotation(Routing.class);
 //                        TODO: inject Spring Bean here
-                        Object instance = clazz.getDeclaredConstructor().newInstance();
+                        Object instance = applicationContext.getBean(clazz);
+//                        Object instance = clazz.getDeclaredConstructor().newInstance();
                         routingRegistry.register(request.httpMethod(), request.path(), new HandlerMethod(instance, method));
                     }
                 }

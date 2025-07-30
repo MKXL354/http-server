@@ -1,4 +1,4 @@
-package org.example.requestMapping.annotation;
+package org.example.routing.annotation;
 
 import org.example.model.enumeration.HttpMethod;
 
