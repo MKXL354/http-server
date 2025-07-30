@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.executor.ServerLoopExecutionManager;
 import org.example.executor.TaskExecutionManager;
-import org.example.handler.HttpHandlerTemplate;
+import org.example.lifeCycle.HttpLifeCycleTemplate;
 import org.example.socket.ClientSocket;
 import org.example.socket.ServerSocket;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class HttpServer {
     private final ServerLoopExecutionManager serverLoopExecutionManager;
     private final TaskExecutionManager taskExecutionManager;
     private final ServerSocket serverSocket;
-    private final HttpHandlerTemplate httpHandlerTemplate;
+    private final HttpLifeCycleTemplate httpLifeCycleTemplate;
 
     @PostConstruct
     public void start() {
@@ -48,7 +48,7 @@ public class HttpServer {
             try {
                 ClientSocket clientSocket = serverSocket.acceptConnection();
                 log.info("client socket opened: {}", clientSocket);
-                taskExecutionManager.execute(() -> httpHandlerTemplate.handle(clientSocket));
+                taskExecutionManager.execute(() -> httpLifeCycleTemplate.executeLifeCycle(clientSocket));
             } catch (IOException e) {
                 log.warn(e.getMessage(), e);
             }
@@ -56,10 +56,9 @@ public class HttpServer {
     }
 }
 
-//TODO: enhanced error handling (send error response with message/trace not just log)
 //TODO: query param (better request line parsing) support
-//TODO: util (like json?)
-//TODO: test infrastructure
+//TODO: util (like json and static resource resolution?)
+//TODO: static binary resources handling? binary/string body in response? write/set only one
 //TODO: config based data variables (IP, PORT, TIMEOUT, etc.) put in Beans
 //TODO: @Bean (with naming to avoid dupe) instead of @Component for customization? and auto-config
 //TODO: middleware chain?

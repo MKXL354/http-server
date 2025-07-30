@@ -1,5 +1,6 @@
 package org.example.routing;
 
+import org.example.model.HandlerMethod;
 import org.example.model.enumeration.HttpMethod;
 
 /**
@@ -8,7 +9,9 @@ import org.example.model.enumeration.HttpMethod;
  */
 public interface RoutingRegistry {
 
-    void register(HttpMethod method, String path, ProcessorMethod processorMethod);
+    void fillRegistry();
 
-    ProcessorMethod getHandler(HttpMethod method, String path);
+    void register(HttpMethod method, String path, HandlerMethod handlerMethod);
+
+    HandlerMethod getHandler(HttpMethod method, String path);
 }

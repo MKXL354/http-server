@@ -1,20 +1,18 @@
-package org.example.routing;
+package org.example.util;
 
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.example.annotation.Routing;
-import org.example.exception.ProcessorRegistrarException;
-import org.springframework.context.ApplicationContext;
+import org.example.exception.AnnotationScannerException;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -23,52 +21,47 @@ import java.util.jar.JarFile;
  * @since 27/07/2025
  */
 @Component
-@RequiredArgsConstructor
-@Slf4j
-public class RoutingScannerImpl implements RoutingScanner {
+public class AnnotationScanner {
 
-    private final String BASE_PACKAGE = "org.example.processor";
-
-    private final ApplicationContext applicationContext;
-    private final RoutingRegistry routingRegistry;
-
-    @PostConstruct
-    @Override
-    public void scanAndRegister() {
-        String path = BASE_PACKAGE.replace('.', '/');
+    public List<Method> getAnnotationHandlers(String basePackage, Class<? extends Annotation> annotationClass) {
+        List<Method> methods = new ArrayList<>();
+        String path = basePackage.replace('.', '/');
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
         try {
             Enumeration<URL> resources = classLoader.getResources(path);
             if (!resources.hasMoreElements()) {
-                throw new ProcessorRegistrarException("failed to find package path " + BASE_PACKAGE);
+                throw new AnnotationScannerException("failed to find package path " + basePackage);
             }
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 if (resource.getProtocol().equals("file")) {
                     File directory = new File(resource.toURI());
-                    scanDirectory(directory, BASE_PACKAGE);
+                    methods.addAll(scanDirectory(directory, basePackage, annotationClass));
                 } else if (resource.getProtocol().equals("jar")) {
-                    scanJar(resource, path);
+                    methods.addAll(scanJar(resource, basePackage, annotationClass));
                 }
             }
+            return methods;
         } catch (Exception e) {
-            throw new ProcessorRegistrarException("failed to scan and register processors", e);
+            throw new AnnotationScannerException("failed to scan and register processors", e);
         }
     }
 
-    private void scanDirectory(File directory, String packageName) {
+    private List<Method> scanDirectory(File directory, String packageName, Class<? extends Annotation> annotationClass) {
+        List<Method> methods = new ArrayList<>();
         for (File file : directory.listFiles()) {
             if (file.isDirectory()) {
-                scanDirectory(file, packageName + "." + file.getName());
+                methods.addAll(scanDirectory(file, packageName + "." + file.getName(), annotationClass));
             } else if (file.getName().endsWith(".class")) {
                 String className = packageName + '.' + file.getName().replace(".class", "");
-                inspectClass(className);
+                methods.addAll(inspectClass(className, annotationClass));
             }
         }
+        return methods;
     }
 
-    private void scanJar(URL resource, String path) throws IOException {
+    private List<Method> scanJar(URL resource, String path, Class<? extends Annotation> annotationClass) throws IOException {
+        List<Method> methods = new ArrayList<>();
         String jarPath = resource.getPath().substring(5, resource.getPath().indexOf("!"));
         try (JarFile jarFile = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8))) {
             Enumeration<JarEntry> entries = jarFile.entries();
@@ -77,24 +70,25 @@ public class RoutingScannerImpl implements RoutingScanner {
                 String name = entry.getName();
                 if (name.startsWith(path) && name.endsWith(".class") && !entry.isDirectory()) {
                     String className = name.replace('/', '.').replace(".class", "");
-                    inspectClass(className);
+                    methods.addAll(inspectClass(className, annotationClass));
                 }
             }
+            return methods;
         }
     }
 
-    private void inspectClass(String className) {
+    private List<Method> inspectClass(String className, Class<? extends Annotation> annotationClass) {
+        List<Method> methods = new ArrayList<>();
         try {
             Class<?> clazz = Class.forName(className);
             for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(Routing.class)) {
-                    Routing request = method.getAnnotation(Routing.class);
-                    Object instance = applicationContext.getBean(clazz);
-                    routingRegistry.register(request.httpMethod(), request.path(), new ProcessorMethod(instance, method));
+                if (method.isAnnotationPresent(annotationClass)) {
+                    methods.add(method);
                 }
             }
+            return methods;
         } catch (ClassNotFoundException e) {
-            throw new ProcessorRegistrarException("failed to inspect processor class", e);
+            throw new AnnotationScannerException("failed to inspect processor class", e);
         }
     }
 }

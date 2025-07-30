@@ -11,7 +11,9 @@ import java.util.Arrays;
 @Getter
 public enum HttpResponseStatus {
 
-    OK(200, "Ok");
+    OK(200, "Ok"),
+    BAD_REQUEST(400, "Bad Request"),
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
     private final int code;
     private final String reasonPhrase;

@@ -1,12 +1,19 @@
 package org.example.routing;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.example.exception.DuplicateProcessorRegisteredException;
+import org.example.annotation.Routing;
+import org.example.exception.DuplicateHandlerMethodRegisteredException;
+import org.example.model.HandlerMethod;
 import org.example.model.enumeration.HttpMethod;
-import org.example.routing.validation.ProcessorValidator;
+import org.example.util.AnnotationScanner;
+import org.example.validation.handler.ProcessorMethodValidator;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,22 +24,37 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RoutingRegistryImpl implements RoutingRegistry {
 
-    private final Map<String, ProcessorMethod> routeMap = new HashMap<>();
+    private final String BASE_PACKAGE = "org.example.processor";
 
-    private final ProcessorValidator processorValidator;
+    private final Map<String, HandlerMethod> routeMap = new HashMap<>();
 
+    private final AnnotationScanner annotationScanner;
+    private final ApplicationContext applicationContext;
+    private final ProcessorMethodValidator processorMethodValidator;
+
+    @PostConstruct
     @Override
-    public void register(HttpMethod method, String path, ProcessorMethod processorMethod) {
-        String routingKey = generateKey(method, path);
-        if (routeMap.containsKey(routingKey)) {
-            throw new DuplicateProcessorRegisteredException("duplicated routing processor registered for: " + routingKey);
+    public void fillRegistry() {
+        List<Method> methods = annotationScanner.getAnnotationHandlers(BASE_PACKAGE, Routing.class);
+        for (Method method : methods) {
+            Routing request = method.getAnnotation(Routing.class);
+            Object instance = applicationContext.getBean(method.getDeclaringClass());
+            register(request.httpMethod(), request.path(), new HandlerMethod(instance, method));
         }
-        processorValidator.checkIsValid(processorMethod);
-        routeMap.put(routingKey, processorMethod);
     }
 
     @Override
-    public ProcessorMethod getHandler(HttpMethod method, String path) {
+    public void register(HttpMethod method, String path, HandlerMethod handlerMethod) {
+        String routingKey = generateKey(method, path);
+        if (routeMap.containsKey(routingKey)) {
+            throw new DuplicateHandlerMethodRegisteredException("duplicated routing processor registered for: " + routingKey);
+        }
+        processorMethodValidator.checkIsValid(handlerMethod);
+        routeMap.put(routingKey, handlerMethod);
+    }
+
+    @Override
+    public HandlerMethod getHandler(HttpMethod method, String path) {
         return routeMap.get(generateKey(method, path));
     }
 
