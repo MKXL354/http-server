@@ -37,9 +37,11 @@ public abstract class HttpLifeCycleTemplate {
                 if (httpRequest == null) {
                     break;
                 }
+//                TODO: replace these logs with appropriate pre/post middleware
                 log.info(httpRequest.toString());
                 httpResponse = new HttpResponse(null, new HttpHeaders(), null);
-                httpResponse = handleHttpResponse(httpRequest, httpResponse);
+                handleHttpResponse(httpRequest, httpResponse);
+//                TODO: move to context creator (pre middleware)
                 boolean keepConnectionOpen = isConnectionHeaderKeptAlive(httpRequest);
                 httpResponse.getHeaders().addHeader(HttpHeader.CONNECTION,
                         keepConnectionOpen ? HttpConnection.KEEP_ALIVE.getValue() : HttpConnection.CLOSE.getValue());
@@ -51,19 +53,7 @@ public abstract class HttpLifeCycleTemplate {
                 log.warn("caught socket exception, breaking request loop", e);
                 break;
             } catch (Exception e) {
-                HandlerMethod handlerMethod = exceptionHandlingRegistry.getHandler(e.getClass());
-                if (handlerMethod == null) {
-//                    TODO: handle this
-//                    throw new ExceptionHandlerMethodNotFoundException()
-                    log.error("could not find handler for exception: ", e);
-                    break;
-                }
-                handlerMethod.invokeWithoutResults(e, httpRequest, httpResponse);
-                try {
-                    httpResponseWriter.writeHttpResponse(httpResponse, clientSocket);
-                } catch (IOException ex) {
-                    log.warn("caught socket exception, breaking request loop", ex);
-                }
+                handleException(e, httpRequest, httpResponse, clientSocket);
             }
         }
 
@@ -83,6 +73,16 @@ public abstract class HttpLifeCycleTemplate {
         }
     }
 
-    public abstract HttpResponse handleHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception;
+    private void handleException(Exception e, HttpRequest httpRequest, HttpResponse httpResponse, ClientSocket clientSocket) {
+        HandlerMethod handlerMethod = exceptionHandlingRegistry.getHandler(e.getClass());
+        handlerMethod.invokeWithoutResults(e, httpRequest, httpResponse);
+        try {
+            httpResponseWriter.writeHttpResponse(httpResponse, clientSocket);
+        } catch (IOException ex) {
+            log.warn("caught socket exception, breaking request loop", ex);
+        }
+    }
+
+    public abstract void handleHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception;
 }
 //TODO: this class has become very messy. fix it maybe?

@@ -11,5 +11,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class RequestPath {
 
-    private String path;
+    private String pathString;
 }

@@ -56,9 +56,11 @@ public class HttpServer {
     }
 }
 
+//TODO: middleware chain infra @(order, exclusion), create subclass (pre-post), register
+//TODO: context in request object, fill with data like keepConnection open?
+//TODO: give dev ability to fill context ->  map? special object?
 //TODO: query param (better request line parsing) support
-//TODO: util (like json and static resource resolution?)
+//TODO: util (like json modeling package and static resource resolution?)
 //TODO: static binary resources handling? binary/string body in response? write/set only one
 //TODO: config based data variables (IP, PORT, TIMEOUT, etc.) put in Beans
 //TODO: @Bean (with naming to avoid dupe) instead of @Component for customization? and auto-config
-//TODO: middleware chain?

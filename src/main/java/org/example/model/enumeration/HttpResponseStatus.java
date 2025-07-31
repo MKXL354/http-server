@@ -13,6 +13,8 @@ public enum HttpResponseStatus {
 
     OK(200, "Ok"),
     BAD_REQUEST(400, "Bad Request"),
+    NOT_FOUND(404, "Not Found"),
+    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
     private final int code;
@@ -21,6 +23,10 @@ public enum HttpResponseStatus {
     HttpResponseStatus(int code, String reasonPhrase) {
         this.code = code;
         this.reasonPhrase = reasonPhrase;
+    }
+
+    public String getMessage() {
+        return code + " " + reasonPhrase;
     }
 
     public static HttpResponseStatus getByCode(int code) {

@@ -14,4 +14,6 @@ public interface RoutingRegistry {
     void register(HttpMethod method, String path, HandlerMethod handlerMethod);
 
     HandlerMethod getHandler(HttpMethod method, String path);
+
+    boolean isPathExist(String path);
 }

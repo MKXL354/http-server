@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimpleFullControlProcessor {
 
-//    @Routing(httpMethod = HttpMethod.GET, path = "/")
-//    public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-//        httpResponse.setBody(new HttpBody(httpRequest.toString()));
-//    }
+    @Routing(httpMethod = HttpMethod.GET, path = "/")
+    public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+        httpResponse.setBody(new HttpBody(httpRequest.toString()));
+    }
 
     @Routing(httpMethod = HttpMethod.POST, path = "/")
     public void processSimplePost(HttpRequest httpRequest, HttpResponse httpResponse) {

@@ -3,7 +3,6 @@ package org.example.exceptionHandling;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.annotation.ExceptionHandling;
-import org.example.exception.DuplicateHandlerMethodRegisteredException;
 import org.example.model.HandlerMethod;
 import org.example.util.AnnotationScanner;
 import org.example.validation.handler.ExceptionHandlerMethodValidator;
@@ -44,9 +43,6 @@ public class ExceptionHandlingRegistryImpl implements ExceptionHandlingRegistry 
 
     @Override
     public void register(Class<? extends Throwable> exceptionClass, HandlerMethod handlerMethod) {
-        if (exceptionHandlers.containsKey(exceptionClass)) {
-            throw new DuplicateHandlerMethodRegisteredException("duplicated exception handler registered for: " + exceptionClass.getSimpleName());
-        }
         exceptionHandlerMethodValidator.checkIsValid(handlerMethod);
         exceptionHandlers.put(exceptionClass, handlerMethod);
     }
@@ -68,4 +64,4 @@ public class ExceptionHandlingRegistryImpl implements ExceptionHandlingRegistry 
         return null;
     }
 }
-//TODO: maybe a registry infrastructure? (since this is so similar to processor registry)
+//TODO: maybe an abstract registry infrastructure? (since this is so similar to processor registry)

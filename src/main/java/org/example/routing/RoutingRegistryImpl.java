@@ -3,8 +3,8 @@ package org.example.routing;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.annotation.Routing;
-import org.example.exception.DuplicateHandlerMethodRegisteredException;
 import org.example.model.HandlerMethod;
+import org.example.model.HttpMethodPath;
 import org.example.model.enumeration.HttpMethod;
 import org.example.util.AnnotationScanner;
 import org.example.validation.handler.ProcessorMethodValidator;
@@ -26,7 +26,7 @@ public class RoutingRegistryImpl implements RoutingRegistry {
 
     private final String BASE_PACKAGE = "org.example.processor";
 
-    private final Map<String, HandlerMethod> routeMap = new HashMap<>();
+    private final Map<HttpMethodPath, HandlerMethod> routeMap = new HashMap<>();
 
     private final AnnotationScanner annotationScanner;
     private final ApplicationContext applicationContext;
@@ -45,20 +45,19 @@ public class RoutingRegistryImpl implements RoutingRegistry {
 
     @Override
     public void register(HttpMethod method, String path, HandlerMethod handlerMethod) {
-        String routingKey = generateKey(method, path);
-        if (routeMap.containsKey(routingKey)) {
-            throw new DuplicateHandlerMethodRegisteredException("duplicated routing processor registered for: " + routingKey);
-        }
         processorMethodValidator.checkIsValid(handlerMethod);
-        routeMap.put(routingKey, handlerMethod);
+        HttpMethodPath methodPath = new HttpMethodPath(method, path);
+        routeMap.put(methodPath, handlerMethod);
     }
 
     @Override
     public HandlerMethod getHandler(HttpMethod method, String path) {
-        return routeMap.get(generateKey(method, path));
+        HttpMethodPath methodPath = new HttpMethodPath(method, path);
+        return routeMap.get(methodPath);
     }
 
-    private String generateKey(HttpMethod method, String path) {
-        return method.name() + " " + path;
+    @Override
+    public boolean isPathExist(String path) {
+        return routeMap.keySet().stream().anyMatch(methodPath -> methodPath.getPath().equals(path));
     }
 }

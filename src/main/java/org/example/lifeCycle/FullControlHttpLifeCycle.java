@@ -1,6 +1,7 @@
 package org.example.lifeCycle;
 
-import org.example.exception.ProcessorMethodNotFoundException;
+import org.example.exception.RequestMethodNotSupportedException;
+import org.example.exception.RequestPathNotFoundException;
 import org.example.exceptionHandling.ExceptionHandlingRegistry;
 import org.example.io.request.HttpRequestReader;
 import org.example.io.response.HttpResponseWriter;
@@ -29,17 +30,19 @@ public class FullControlHttpLifeCycle extends HttpLifeCycleTemplate {
     }
 
     @Override
-    public HttpResponse handleHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception {
+    public void handleHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception {
         RequestLine requestLine = httpRequest.getRequestLine();
+        if (!routingRegistry.isPathExist(requestLine.getRequestPath().getPathString())) {
+            throw new RequestPathNotFoundException();
+        }
         HandlerMethod handlerMethod = routingRegistry.getHandler(requestLine.getHttpMethod(),
-                requestLine.getRequestPath().getPath());
+                requestLine.getRequestPath().getPathString());
+        if (handlerMethod == null) {
+            throw new RequestMethodNotSupportedException();
+        }
+        //        TODO: this filling of http request can be moved in to a pre middleware
         StatusLine statusLine = new StatusLine(requestLine.getHttpVersion(), HttpResponseStatus.OK);
         httpResponse.setStatusLine(statusLine);
-//        HttpResponse httpResponse = new HttpResponse(statusLine, new HttpHeaders(), null);
-        if (handlerMethod == null) {
-            throw new ProcessorMethodNotFoundException();
-        }
         handlerMethod.invokeWithResults(httpRequest, httpResponse);
-        return httpResponse;
     }
 }
