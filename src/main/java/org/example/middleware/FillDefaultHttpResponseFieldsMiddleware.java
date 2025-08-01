@@ -1,6 +1,7 @@
 package org.example.middleware;
 
 import org.example.annotation.Middleware;
+import org.example.model.HttpBody;
 import org.example.model.enumeration.HttpHeader;
 import org.example.model.enumeration.HttpResponseStatus;
 import org.example.model.enumeration.header.HttpContentType;
@@ -12,13 +13,14 @@ import org.example.model.response.StatusLine;
  * @author Mehdi Kamali
  * @since 01/08/2025
  */
-@Middleware(order = Integer.MAX_VALUE)
+@Middleware(order = Integer.MIN_VALUE + 1)
 public class FillDefaultHttpResponseFieldsMiddleware extends PreProcessMiddleware {
 
     @Override
     public void preProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
         StatusLine statusLine = new StatusLine(httpRequest.getRequestLine().getHttpVersion(), HttpResponseStatus.OK);
         httpResponse.setStatusLine(statusLine);
+        httpResponse.setBody(new HttpBody(""));
         httpResponse.getHeaders().addHeader(HttpHeader.CONTENT_TYPE, HttpContentType.PLAIN_TEXT.getValue());
     }
 }

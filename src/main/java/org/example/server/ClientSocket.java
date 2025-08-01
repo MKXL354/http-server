@@ -1,8 +1,9 @@
-package org.example.socket;
+package org.example.server;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 
 /**
  * @author Mehdi Kamali
@@ -13,6 +14,8 @@ public interface ClientSocket {
     OutputStream getOutputStream() throws IOException;
 
     InputStream getInputStream() throws IOException;
+
+    InetAddress getInetAddress();
 
     void close() throws IOException;
 }

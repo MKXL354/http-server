@@ -1,8 +1,7 @@
-package org.example.util;
+package org.example.util.classpathScan;
 
 import org.example.exception.AnnotationScannerException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +21,9 @@ import java.util.jar.JarFile;
  * @since 27/07/2025
  */
 @Component
-@Controller
-public class AnnotationScanner {
+public class AnnotationScannerImpl implements AnnotationScanner {
 
+    @Override
     public <T> List<Class<? extends T>> scanForType(Class<T> type, String basePackage, Class<? extends Annotation> annotationClass) {
         try {
             List<String> classNames = scanForClassNames(basePackage);
@@ -41,6 +40,7 @@ public class AnnotationScanner {
         }
     }
 
+    @Override
     public List<Method> scanForMethods(String basePackage, Class<? extends Annotation> annotationClass) {
         try {
             List<String> classNames = scanForClassNames(basePackage);

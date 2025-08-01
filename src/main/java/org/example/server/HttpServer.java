@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.executor.ServerLoopExecutionManager;
 import org.example.executor.TaskExecutionManager;
 import org.example.lifeCycle.HttpLifeCycleTemplate;
-import org.example.socket.ClientSocket;
-import org.example.socket.ServerSocket;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

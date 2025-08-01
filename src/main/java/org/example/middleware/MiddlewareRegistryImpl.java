@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.example.annotation.Middleware;
 import org.example.exception.DuplicateMiddlewareOrderRegisteredException;
-import org.example.util.AnnotationScanner;
+import org.example.util.classpathScan.AnnotationScanner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 

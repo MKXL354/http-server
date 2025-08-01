@@ -1,7 +1,7 @@
 package org.example.io.response;
 
 import org.example.model.response.HttpResponse;
-import org.example.socket.ClientSocket;
+import org.example.server.ClientSocket;
 
 import java.io.IOException;
 

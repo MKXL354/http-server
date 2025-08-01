@@ -1,9 +1,6 @@
 package org.example.model;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.example.model.enumeration.HttpHeader;
 
 import java.util.HashMap;
@@ -16,9 +13,7 @@ import java.util.Map;
 @Data
 public class HttpHeaders {
 
-    @Getter
-    @Setter(AccessLevel.NONE)
-    private Map<HttpHeader, String> headerMap = new HashMap<>();
+    private final Map<HttpHeader, String> headerMap = new HashMap<>();
 
     public void addHeader(HttpHeader header, String value) {
         headerMap.put(header, value);

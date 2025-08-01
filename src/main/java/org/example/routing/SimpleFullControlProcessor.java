@@ -1,4 +1,4 @@
-package org.example.processor;
+package org.example.routing;
 
 import org.example.annotation.Routing;
 import org.example.model.HttpBody;
@@ -16,21 +16,17 @@ public class SimpleFullControlProcessor {
 
     @Routing(httpMethod = HttpMethod.GET, path = "/")
     public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-//        TODO: remove the rest and use util to read index.html file NIO fashion
+//        TODO: use util to NIO read index.html file
         httpResponse.setBody(new HttpBody(httpRequest.toString()));
     }
 
     @Routing(httpMethod = HttpMethod.POST, path = "/")
     public void processSimplePost(HttpRequest httpRequest, HttpResponse httpResponse) {
-        httpResponse.setBody(new HttpBody(httpRequest.toString()));
-    }
-
-    @Routing(httpMethod = HttpMethod.DELETE, path = "/")
-    public void processSimpleDelete(HttpRequest httpRequest, HttpResponse httpResponse) {
     }
 
     @Routing(httpMethod = HttpMethod.GET, path = "/favicon.ico")
     public void processGetFavIcon(HttpRequest httpRequest, HttpResponse httpResponse) {
+//        TODO: binary data here
     }
 }
 //TODO: maybe rename these to plain handler names? handler and exception handler

@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.annotation.ExceptionHandling;
 import org.example.model.HandlerMethod;
-import org.example.util.AnnotationScanner;
+import org.example.util.classpathScan.AnnotationScanner;
 import org.example.validation.handler.ExceptionHandlerMethodValidator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;

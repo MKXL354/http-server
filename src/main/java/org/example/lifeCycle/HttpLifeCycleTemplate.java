@@ -12,7 +12,7 @@ import org.example.model.enumeration.HttpVersion;
 import org.example.model.enumeration.header.HttpConnection;
 import org.example.model.request.HttpRequest;
 import org.example.model.response.HttpResponse;
-import org.example.socket.ClientSocket;
+import org.example.server.ClientSocket;
 
 import java.io.IOException;
 

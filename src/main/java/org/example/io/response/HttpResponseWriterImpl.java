@@ -1,17 +1,13 @@
 package org.example.io.response;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.model.HttpBody;
-import org.example.model.enumeration.HttpHeader;
 import org.example.model.response.HttpResponse;
-import org.example.socket.ClientSocket;
+import org.example.server.ClientSocket;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author Mehdi Kamali
@@ -34,18 +30,10 @@ public class HttpResponseWriterImpl implements HttpResponseWriter {
                 response.getStatusLine().getHttpResponseStatus().getReasonPhrase());
         responseToWrite.append(statusLineString).append(LINE_SEPARATOR);
 
-        HttpBody body = response.getBody();
-        String bodyToWrite = "";
-        if (body != null && StringUtils.hasText(body.getBodyString())) {
-            response.getHeaders().addHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(body.getBodyString().getBytes(StandardCharsets.UTF_8).length));
-            bodyToWrite = body.getBodyString();
-        } else {
-            response.getHeaders().addHeader(HttpHeader.CONTENT_LENGTH, "0");
-        }
         response.getHeaders().getHeaderMap().forEach((key, value) ->
                 responseToWrite.append(key.getValue()).append(HEADER_SEPARATOR).append(value).append(LINE_SEPARATOR));
         responseToWrite.append(LINE_SEPARATOR);
-        responseToWrite.append(bodyToWrite);
+        responseToWrite.append(response.getBody().getBodyString());
 
         log.info(response.toString());
         writer.write(responseToWrite.toString());

@@ -3,6 +3,7 @@ package org.example.io.request;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exception.MalformedHttpRequestException;
 import org.example.model.HttpBody;
+import org.example.model.HttpContext;
 import org.example.model.HttpHeaders;
 import org.example.model.enumeration.HttpHeader;
 import org.example.model.enumeration.HttpMethod;
@@ -10,7 +11,7 @@ import org.example.model.enumeration.HttpVersion;
 import org.example.model.request.HttpRequest;
 import org.example.model.request.RequestLine;
 import org.example.model.request.RequestPath;
-import org.example.socket.ClientSocket;
+import org.example.server.ClientSocket;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -37,7 +38,9 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         }
         HttpHeaders headers = readHttpHeaders(input);
         HttpBody body = readHttpBody(headers, input);
-        return new HttpRequest(requestLine, headers, body);
+        HttpContext httpContext = new HttpContext();
+        httpContext.setClientIp(clientSocket.getInetAddress().getHostAddress());
+        return new HttpRequest(requestLine, headers, body, httpContext);
     }
 
     private RequestLine readRequestLine(BufferedReader input) throws MalformedHttpRequestException, IOException {

@@ -1,8 +1,9 @@
-package org.example.socket;
+package org.example.server;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -28,7 +29,13 @@ public class ClientSocketImpl implements ClientSocket {
 
     @Override
     public InputStream getInputStream() throws IOException {
+        System.out.println(clientSocket.getInetAddress().getHostAddress());
         return clientSocket.getInputStream();
+    }
+
+    @Override
+    public InetAddress getInetAddress() {
+        return clientSocket.getInetAddress();
     }
 
     @Override

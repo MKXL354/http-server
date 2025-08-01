@@ -6,7 +6,7 @@ import org.example.annotation.Routing;
 import org.example.model.HandlerMethod;
 import org.example.model.HttpMethodPath;
 import org.example.model.enumeration.HttpMethod;
-import org.example.util.AnnotationScanner;
+import org.example.util.classpathScan.AnnotationScanner;
 import org.example.validation.handler.ProcessorMethodValidator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RoutingRegistryImpl implements RoutingRegistry {
 
-    private final String BASE_PACKAGE = "org.example.processor";
+    private final String BASE_PACKAGE = "org.example.routing";
 
     private final Map<HttpMethodPath, HandlerMethod> routeMap = new HashMap<>();
 
