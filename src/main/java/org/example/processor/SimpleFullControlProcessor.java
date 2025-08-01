@@ -16,6 +16,7 @@ public class SimpleFullControlProcessor {
 
     @Routing(httpMethod = HttpMethod.GET, path = "/")
     public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
+//        TODO: remove the rest and use util to read index.html file NIO fashion
         httpResponse.setBody(new HttpBody(httpRequest.toString()));
     }
 
@@ -32,3 +33,4 @@ public class SimpleFullControlProcessor {
     public void processGetFavIcon(HttpRequest httpRequest, HttpResponse httpResponse) {
     }
 }
+//TODO: maybe rename these to plain handler names? handler and exception handler

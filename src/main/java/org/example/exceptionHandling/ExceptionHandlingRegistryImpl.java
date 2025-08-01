@@ -33,7 +33,7 @@ public class ExceptionHandlingRegistryImpl implements ExceptionHandlingRegistry 
     @PostConstruct
     @Override
     public void fillRegistry() {
-        List<Method> methods = annotationScanner.getAnnotationHandlers(BASE_PACKAGE, ExceptionHandling.class);
+        List<Method> methods = annotationScanner.scanForMethods(BASE_PACKAGE, ExceptionHandling.class);
         for (Method method : methods) {
             ExceptionHandling request = method.getAnnotation(ExceptionHandling.class);
             Object instance = applicationContext.getBean(method.getDeclaringClass());
@@ -64,4 +64,3 @@ public class ExceptionHandlingRegistryImpl implements ExceptionHandlingRegistry 
         return null;
     }
 }
-//TODO: maybe an abstract registry infrastructure? (since this is so similar to processor registry)

@@ -35,7 +35,7 @@ public class RoutingRegistryImpl implements RoutingRegistry {
     @PostConstruct
     @Override
     public void fillRegistry() {
-        List<Method> methods = annotationScanner.getAnnotationHandlers(BASE_PACKAGE, Routing.class);
+        List<Method> methods = annotationScanner.scanForMethods(BASE_PACKAGE, Routing.class);
         for (Method method : methods) {
             Routing request = method.getAnnotation(Routing.class);
             Object instance = applicationContext.getBean(method.getDeclaringClass());
@@ -57,7 +57,7 @@ public class RoutingRegistryImpl implements RoutingRegistry {
     }
 
     @Override
-    public boolean isPathExist(String path) {
+    public boolean isPathRoutingExist(String path) {
         return routeMap.keySet().stream().anyMatch(methodPath -> methodPath.getPath().equals(path));
     }
 }

@@ -15,5 +15,5 @@ public interface RoutingRegistry {
 
     HandlerMethod getHandler(HttpMethod method, String path);
 
-    boolean isPathExist(String path);
+    boolean isPathRoutingExist(String path);
 }

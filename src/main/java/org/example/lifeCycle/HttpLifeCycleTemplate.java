@@ -37,11 +37,8 @@ public abstract class HttpLifeCycleTemplate {
                 if (httpRequest == null) {
                     break;
                 }
-//                TODO: replace these logs with appropriate pre/post middleware
-                log.info(httpRequest.toString());
                 httpResponse = new HttpResponse(null, new HttpHeaders(), null);
                 handleHttpResponse(httpRequest, httpResponse);
-//                TODO: move to context creator (pre middleware)
                 boolean keepConnectionOpen = isConnectionHeaderKeptAlive(httpRequest);
                 httpResponse.getHeaders().addHeader(HttpHeader.CONNECTION,
                         keepConnectionOpen ? HttpConnection.KEEP_ALIVE.getValue() : HttpConnection.CLOSE.getValue());
@@ -65,6 +62,7 @@ public abstract class HttpLifeCycleTemplate {
     }
 
     private boolean isConnectionHeaderKeptAlive(HttpRequest httpRequest) {
+//        TODO: move to context creator (pre middleware)
         HttpConnection connectionHeaderValue = HttpConnection.getByValue(httpRequest.getHeaders().getHeaderValue(HttpHeader.CONNECTION));
         if (connectionHeaderValue == null) {
             return !httpRequest.getRequestLine().getHttpVersion().equals(HttpVersion.HTTP1);
