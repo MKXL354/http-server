@@ -15,6 +15,7 @@ import java.util.Map;
 public class HttpContext {
 
     private String clientIp;
+    private boolean isConnectionKeptAlive;
     @Getter(AccessLevel.NONE)
     private final Map<Class<?>, Object> attributes = new HashMap<>();
 

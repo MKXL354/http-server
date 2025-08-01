@@ -16,7 +16,7 @@ public class SimpleFullControlProcessor {
 
     @Routing(httpMethod = HttpMethod.GET, path = "/")
     public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
-//        TODO: use util to NIO read index.html file
+//        TODO: NIO util read index.html file?
         httpResponse.setBody(new HttpBody(httpRequest.toString()));
     }
 
@@ -26,7 +26,6 @@ public class SimpleFullControlProcessor {
 
     @Routing(httpMethod = HttpMethod.GET, path = "/favicon.ico")
     public void processGetFavIcon(HttpRequest httpRequest, HttpResponse httpResponse) {
-//        TODO: binary data here
+//        TODO: binary data here? requires HttpRequest change of structure and writer
     }
 }
-//TODO: maybe rename these to plain handler names? handler and exception handler

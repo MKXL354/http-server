@@ -1,4 +1,4 @@
-package org.example.server;
+package org.example.server.socket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -13,8 +13,8 @@ import org.example.model.response.StatusLine;
  * @author Mehdi Kamali
  * @since 01/08/2025
  */
-@Middleware(order = Integer.MIN_VALUE + 1)
-public class FillDefaultHttpResponseFieldsMiddleware extends PreProcessMiddleware {
+@Middleware(order = Integer.MAX_VALUE)
+public class FillDefaultHttpResponseValuesMiddleware extends PreProcessMiddleware {
 
     @Override
     public void preProcess(HttpRequest httpRequest, HttpResponse httpResponse) {

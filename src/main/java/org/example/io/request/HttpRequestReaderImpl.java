@@ -11,7 +11,7 @@ import org.example.model.enumeration.HttpVersion;
 import org.example.model.request.HttpRequest;
 import org.example.model.request.RequestLine;
 import org.example.model.request.RequestPath;
-import org.example.server.ClientSocket;
+import org.example.server.socket.ClientSocket;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

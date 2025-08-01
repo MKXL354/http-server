@@ -2,7 +2,7 @@ package org.example.io.request;
 
 import org.example.exception.MalformedHttpRequestException;
 import org.example.model.request.HttpRequest;
-import org.example.server.ClientSocket;
+import org.example.server.socket.ClientSocket;
 
 import java.io.IOException;
 

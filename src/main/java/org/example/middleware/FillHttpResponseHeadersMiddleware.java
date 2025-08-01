@@ -3,6 +3,7 @@ package org.example.middleware;
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotation.Middleware;
 import org.example.model.enumeration.HttpHeader;
+import org.example.model.enumeration.header.HttpConnection;
 import org.example.model.request.HttpRequest;
 import org.example.model.response.HttpResponse;
 import org.springframework.util.StringUtils;
@@ -25,6 +26,9 @@ public class FillHttpResponseHeadersMiddleware extends PostProcessMiddleware {
         } else {
             httpResponse.getHeaders().addHeader(HttpHeader.CONTENT_LENGTH, "0");
         }
+
+        httpResponse.getHeaders().addHeader(HttpHeader.CONNECTION, httpRequest.getHttpContext().isConnectionKeptAlive() ?
+                HttpConnection.KEEP_ALIVE.getValue() : HttpConnection.CLOSE.getValue());
         log.info(httpResponse.toString());
     }
 }

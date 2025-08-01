@@ -2,7 +2,7 @@ package org.example.io.response;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.model.response.HttpResponse;
-import org.example.server.ClientSocket;
+import org.example.server.socket.ClientSocket;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
@@ -35,7 +35,6 @@ public class HttpResponseWriterImpl implements HttpResponseWriter {
         responseToWrite.append(LINE_SEPARATOR);
         responseToWrite.append(response.getBody().getBodyString());
 
-        log.info(response.toString());
         writer.write(responseToWrite.toString());
         writer.flush();
     }

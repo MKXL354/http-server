@@ -1,4 +1,4 @@
-package org.example.lifeCycle;
+package org.example.server.lifeCycle;
 
 import org.example.exception.RequestMethodNotSupportedException;
 import org.example.exception.RequestPathNotFoundException;
@@ -42,7 +42,6 @@ public class FullControlHttpLifeCycle extends HttpLifeCycleTemplate {
         if (handlerMethod == null) {
             throw new RequestMethodNotSupportedException();
         }
-//        TODO: maybe move all these to template and rename/repackage
         middlewareRegistry.getPreProcessMiddlewareChainStart().process(httpRequest, httpResponse);
         handlerMethod.invokeWithResults(httpRequest, httpResponse);
         middlewareRegistry.getPostProcessMiddlewareChainStart().process(httpRequest, httpResponse);
