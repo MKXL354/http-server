@@ -26,15 +26,14 @@ public abstract class HttpLifeCycleTemplate {
     private final ExceptionHandlingRegistry exceptionHandlingRegistry;
 
     public void executeLifeCycle(ClientSocket clientSocket) {
-        HttpRequest httpRequest = null;
-        HttpResponse httpResponse = null;
         while (true) {
+            HttpRequest httpRequest = null;
+            HttpResponse httpResponse = new HttpResponse(null, new HttpHeaders(), null);
             try {
                 httpRequest = httpRequestReader.readHttpRequest(clientSocket);
                 if (httpRequest == null) {
                     break;
                 }
-                httpResponse = new HttpResponse(null, new HttpHeaders(), null);
                 handleHttpResponse(httpRequest, httpResponse);
                 boolean isConnectionKeptAlive = httpRequest.getHttpContext().isConnectionKeptAlive();
                 httpResponseWriter.writeHttpResponse(httpResponse, clientSocket);

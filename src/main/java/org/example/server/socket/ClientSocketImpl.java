@@ -29,7 +29,6 @@ public class ClientSocketImpl implements ClientSocket {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        System.out.println(clientSocket.getInetAddress().getHostAddress());
         return clientSocket.getInputStream();
     }
 
