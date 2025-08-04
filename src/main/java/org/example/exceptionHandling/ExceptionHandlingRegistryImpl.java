@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Mehdi Kamali
@@ -33,7 +33,7 @@ public class ExceptionHandlingRegistryImpl implements ExceptionHandlingRegistry 
     @PostConstruct
     @Override
     public void fillRegistry() {
-        List<Method> methods = annotationScanner.scanForMethods(BASE_PACKAGE, ExceptionHandling.class);
+        Set<Method> methods = annotationScanner.scanForMethods(BASE_PACKAGE, ExceptionHandling.class);
         for (Method method : methods) {
             ExceptionHandling request = method.getAnnotation(ExceptionHandling.class);
             Object instance = applicationContext.getBean(method.getDeclaringClass());

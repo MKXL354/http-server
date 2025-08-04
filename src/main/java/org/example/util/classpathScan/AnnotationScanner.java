@@ -4,7 +4,7 @@ import org.example.exception.AnnotationScannerException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mehdi Kamali
@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface AnnotationScanner {
 
-    <T> List<Class<? extends T>> scanForType(Class<T> type, String basePackage, Class<? extends Annotation> annotationClass)
+    <T> Set<Class<? extends T>> scanForType(Class<T> type, String basePackage, Class<? extends Annotation> annotationClass)
             throws AnnotationScannerException;
 
-    List<Method> scanForMethods(String basePackage, Class<? extends Annotation> annotationClass) throws AnnotationScannerException;
+    Set<Method> scanForMethods(String basePackage, Class<? extends Annotation> annotationClass) throws AnnotationScannerException;
 }

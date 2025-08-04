@@ -40,8 +40,8 @@ public class MiddlewareRegistryImpl implements MiddlewareRegistry {
     }
 
     private <T extends ProcessMiddleware> T getChainStart(Class<T> type) {
-        List<Class<? extends T>> preProcessorClasses = annotationScanner.scanForType(type,
-                BASE_PACKAGE, Middleware.class);
+        List<Class<? extends T>> preProcessorClasses = new ArrayList<>(annotationScanner.scanForType(type,
+                BASE_PACKAGE, Middleware.class));
         HashMap<Integer, Class<?>> seenOrders = new HashMap<>();
         for (Class<?> clazz : preProcessorClasses) {
             Integer order = clazz.getAnnotation(Middleware.class).order();

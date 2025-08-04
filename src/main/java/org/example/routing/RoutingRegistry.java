@@ -1,7 +1,10 @@
 package org.example.routing;
 
+import org.example.exception.RequestMethodNotSupportedException;
+import org.example.exception.RequestPathNotFoundException;
 import org.example.model.HandlerMethod;
 import org.example.model.enumeration.HttpMethod;
+import org.example.model.request.RequestPath;
 
 /**
  * @author Mehdi Kamali
@@ -11,9 +14,5 @@ public interface RoutingRegistry {
 
     void fillRegistry();
 
-    void register(HttpMethod method, String path, HandlerMethod handlerMethod);
-
-    HandlerMethod getHandler(HttpMethod method, String path);
-
-    boolean isPathRoutingExist(String path);
+    HandlerMethod getHandler(HttpMethod method, RequestPath requestPath) throws RequestPathNotFoundException, RequestMethodNotSupportedException;
 }

@@ -1,7 +1,5 @@
 package org.example.server.lifeCycle;
 
-import org.example.exception.RequestMethodNotSupportedException;
-import org.example.exception.RequestPathNotFoundException;
 import org.example.exceptionHandling.ExceptionHandlingRegistry;
 import org.example.io.request.HttpRequestReader;
 import org.example.io.response.HttpResponseWriter;
@@ -9,6 +7,7 @@ import org.example.middleware.MiddlewareRegistry;
 import org.example.model.HandlerMethod;
 import org.example.model.request.HttpRequest;
 import org.example.model.request.RequestLine;
+import org.example.model.request.RequestPath;
 import org.example.model.response.HttpResponse;
 import org.example.routing.RoutingRegistry;
 import org.springframework.stereotype.Component;
@@ -34,14 +33,8 @@ public class FullControlHttpLifeCycle extends HttpLifeCycleTemplate {
     @Override
     public void handleHttpResponse(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception {
         RequestLine requestLine = httpRequest.getRequestLine();
-        if (!routingRegistry.isPathRoutingExist(requestLine.getRequestPath().getPathString())) {
-            throw new RequestPathNotFoundException();
-        }
-        HandlerMethod handlerMethod = routingRegistry.getHandler(requestLine.getHttpMethod(),
-                requestLine.getRequestPath().getPathString());
-        if (handlerMethod == null) {
-            throw new RequestMethodNotSupportedException();
-        }
+        RequestPath requestPath = requestLine.getRequestPath();
+        HandlerMethod handlerMethod = routingRegistry.getHandler(requestLine.getHttpMethod(), requestPath);
         middlewareRegistry.getPreProcessMiddlewareChainStart().process(httpRequest, httpResponse);
         handlerMethod.invokeWithResults(httpRequest, httpResponse);
         middlewareRegistry.getPostProcessMiddlewareChainStart().process(httpRequest, httpResponse);

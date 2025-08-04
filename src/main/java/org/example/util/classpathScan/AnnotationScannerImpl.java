@@ -10,9 +10,9 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -24,10 +24,10 @@ import java.util.jar.JarFile;
 public class AnnotationScannerImpl implements AnnotationScanner {
 
     @Override
-    public <T> List<Class<? extends T>> scanForType(Class<T> type, String basePackage, Class<? extends Annotation> annotationClass) {
+    public <T> Set<Class<? extends T>> scanForType(Class<T> type, String basePackage, Class<? extends Annotation> annotationClass) {
         try {
-            List<String> classNames = scanForClassNames(basePackage);
-            List<Class<? extends T>> classes = new ArrayList<>();
+            Set<String> classNames = scanForClassNames(basePackage);
+            Set<Class<? extends T>> classes = new HashSet<>();
             for (String className : classNames) {
                 Class<?> clazz = Class.forName(className);
                 if (clazz.isAnnotationPresent(annotationClass) && type.isAssignableFrom(clazz)) {
@@ -41,10 +41,10 @@ public class AnnotationScannerImpl implements AnnotationScanner {
     }
 
     @Override
-    public List<Method> scanForMethods(String basePackage, Class<? extends Annotation> annotationClass) {
+    public Set<Method> scanForMethods(String basePackage, Class<? extends Annotation> annotationClass) {
         try {
-            List<String> classNames = scanForClassNames(basePackage);
-            List<Method> methods = new ArrayList<>();
+            Set<String> classNames = scanForClassNames(basePackage);
+            Set<Method> methods = new HashSet<>();
             for (String className : classNames) {
                 Class<?> clazz = Class.forName(className);
                 for (Method method : clazz.getDeclaredMethods()) {
@@ -59,8 +59,8 @@ public class AnnotationScannerImpl implements AnnotationScanner {
         }
     }
 
-    private List<String> scanForClassNames(String basePackage) throws Exception {
-        List<String> classNames = new ArrayList<>();
+    private Set<String> scanForClassNames(String basePackage) throws Exception {
+        Set<String> classNames = new HashSet<>();
         String path = basePackage.replace('.', '/');
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources = classLoader.getResources(path);
@@ -79,8 +79,8 @@ public class AnnotationScannerImpl implements AnnotationScanner {
         return classNames;
     }
 
-    private List<String> scanDirectoryForClassNames(File directory, String packageName) {
-        List<String> classNames = new ArrayList<>();
+    private Set<String> scanDirectoryForClassNames(File directory, String packageName) {
+        Set<String> classNames = new HashSet<>();
         for (File file : directory.listFiles()) {
             if (file.isDirectory()) {
                 classNames.addAll(scanDirectoryForClassNames(file, packageName + "." + file.getName()));
@@ -92,8 +92,8 @@ public class AnnotationScannerImpl implements AnnotationScanner {
         return classNames;
     }
 
-    private List<String> scanJarForClassNames(URL resource, String path) throws IOException {
-        List<String> classNames = new ArrayList<>();
+    private Set<String> scanJarForClassNames(URL resource, String path) throws IOException {
+        Set<String> classNames = new HashSet<>();
         String jarPath = resource.getPath().substring(5, resource.getPath().indexOf("!"));
         try (JarFile jarFile = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8))) {
             Enumeration<JarEntry> entries = jarFile.entries();

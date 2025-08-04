@@ -6,7 +6,6 @@ import org.example.exceptionHandling.ExceptionHandlingRegistry;
 import org.example.io.request.HttpRequestReader;
 import org.example.io.response.HttpResponseWriter;
 import org.example.model.HandlerMethod;
-import org.example.model.HttpHeaders;
 import org.example.model.request.HttpRequest;
 import org.example.model.response.HttpResponse;
 import org.example.server.socket.ClientSocket;
@@ -28,7 +27,7 @@ public abstract class HttpLifeCycleTemplate {
     public void executeLifeCycle(ClientSocket clientSocket) {
         while (true) {
             HttpRequest httpRequest = null;
-            HttpResponse httpResponse = new HttpResponse(null, new HttpHeaders(), null);
+            HttpResponse httpResponse = new HttpResponse(null, null);
             try {
                 httpRequest = httpRequestReader.readHttpRequest(clientSocket);
                 if (httpRequest == null) {
@@ -57,8 +56,8 @@ public abstract class HttpLifeCycleTemplate {
     }
 
     private void handleException(Exception e, HttpRequest httpRequest, HttpResponse httpResponse, ClientSocket clientSocket) {
-        HandlerMethod handlerMethod = exceptionHandlingRegistry.getHandler(e.getClass());
-        handlerMethod.invokeWithoutResults(e, httpRequest, httpResponse);
+        HandlerMethod exceptionHandler = exceptionHandlingRegistry.getHandler(e.getClass());
+        exceptionHandler.invokeWithoutResults(e, httpRequest, httpResponse);
         try {
             httpResponseWriter.writeHttpResponse(httpResponse, clientSocket);
         } catch (IOException ex) {

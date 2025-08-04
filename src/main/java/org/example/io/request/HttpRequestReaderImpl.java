@@ -79,7 +79,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
                 if (keyValuePair.length != 2) {
                     throw new MalformedHttpRequestException();
                 }
-                requestPath.addQueryParameter(keyValuePair[0], keyValuePair[1]);
+                requestPath.getQueryParameters().put(keyValuePair[0], keyValuePair[1]);
             }
         }
         return requestPath;
