@@ -11,7 +11,9 @@ import java.util.Arrays;
 @Getter
 public enum HttpContentType {
 
-    PLAIN_TEXT("text/plain");
+    PLAIN_TEXT("text/plain"),
+    IMAGE_X_ICON("image/x-icon"),
+    HTML("text/html");
 
     private final String value;
 

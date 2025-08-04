@@ -3,7 +3,7 @@ package org.example.exceptionHandling;
 import org.example.annotation.ExceptionHandling;
 import org.example.exception.MalformedHttpRequestException;
 import org.example.exception.RequestMethodNotSupportedException;
-import org.example.exception.RequestPathNotFoundException;
+import org.example.exception.base.NotFoundException;
 import org.example.model.HttpBody;
 import org.example.model.enumeration.HttpHeader;
 import org.example.model.enumeration.HttpResponseStatus;
@@ -26,8 +26,8 @@ public class DefaultExceptionHandler {
         handleGeneralFormat(request, response, HttpResponseStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandling(RequestPathNotFoundException.class)
-    public void handleProcessorMethodNotFoundException(RequestPathNotFoundException e, HttpRequest request, HttpResponse response) {
+    @ExceptionHandling(NotFoundException.class)
+    public void handleNotFoundException(NotFoundException e, HttpRequest request, HttpResponse response) {
         handleGeneralFormat(request, response, HttpResponseStatus.NOT_FOUND);
     }
 

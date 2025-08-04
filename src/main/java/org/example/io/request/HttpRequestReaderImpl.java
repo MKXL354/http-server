@@ -95,7 +95,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
             }
             HttpHeader key = HttpHeader.getByValue(line.substring(0, colonIndex).trim());
             if (key == null) {
-                throw new MalformedHttpRequestException();
+                continue;
             }
             if (headers.getHeaderValue(key) != null) {
                 throw new MalformedHttpRequestException();
