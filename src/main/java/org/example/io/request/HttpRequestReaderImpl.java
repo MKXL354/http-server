@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -31,20 +32,21 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
 
     @Override
     public HttpRequest readHttpRequest(ClientSocket clientSocket) throws MalformedHttpRequestException, IOException {
-        BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        InputStream inputStream = clientSocket.getInputStream();
+        BufferedReader input = new BufferedReader(new InputStreamReader(inputStream));
         RequestLine requestLine = readRequestLine(input);
         if (requestLine == null) {
             return null;
         }
         HttpHeaders headers = readHttpHeaders(input);
-        HttpBody body = readHttpBody(headers, input);
+        HttpBody body = readHttpBody(headers, inputStream);
         HttpContext httpContext = new HttpContext();
         httpContext.setClientIp(clientSocket.getInetAddress().getHostAddress());
         return new HttpRequest(requestLine, headers, body, httpContext);
     }
 
-    private RequestLine readRequestLine(BufferedReader input) throws MalformedHttpRequestException, IOException {
-        String line = input.readLine();
+    private RequestLine readRequestLine(BufferedReader inputReader) throws MalformedHttpRequestException, IOException {
+        String line = inputReader.readLine();
         if (line == null) {
             log.info("EOF reached");
             return null;
@@ -83,17 +85,17 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         return requestPath;
     }
 
-    private HttpHeaders readHttpHeaders(BufferedReader input) throws MalformedHttpRequestException, IOException {
+    private HttpHeaders readHttpHeaders(BufferedReader inputReader) throws MalformedHttpRequestException, IOException {
         String line;
         HttpHeaders headers = new HttpHeaders();
-        while ((line = input.readLine()) != null && !line.isBlank()) {
+        while ((line = inputReader.readLine()) != null && !line.isBlank()) {
             int colonIndex = line.indexOf(":");
             if (colonIndex == -1) {
                 throw new MalformedHttpRequestException();
             }
             HttpHeader key = HttpHeader.getByValue(line.substring(0, colonIndex).trim());
             if (key == null) {
-                continue;
+                throw new MalformedHttpRequestException();
             }
             if (headers.getHeaderValue(key) != null) {
                 throw new MalformedHttpRequestException();
@@ -107,7 +109,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         return headers;
     }
 
-    private HttpBody readHttpBody(HttpHeaders headers, BufferedReader input) throws MalformedHttpRequestException, IOException {
+    private HttpBody readHttpBody(HttpHeaders headers, InputStream inputReader) throws MalformedHttpRequestException, IOException {
         String contentLengthValue = headers.getHeaderValue(HttpHeader.CONTENT_LENGTH);
         if (contentLengthValue != null) {
             try {
@@ -115,10 +117,17 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
                 if (contentLength > MAX_CONTENT_LENGTH) {
                     throw new MalformedHttpRequestException();
                 }
-                char[] buffer = new char[contentLength];
-                int read = input.read(buffer, 0, contentLength);
-                String body = new String(buffer, 0, read);
-                return new HttpBody(body.trim());
+                byte[] buffer = new byte[contentLength];
+                int bytesRead = 0;
+                while (bytesRead < contentLength) {
+                    int actualRead = inputReader.read(buffer, bytesRead, contentLength - bytesRead);
+                    if (actualRead == -1) break;
+                    bytesRead += actualRead;
+                }
+                if (bytesRead != contentLength) {
+                    throw new MalformedHttpRequestException();
+                }
+                return new HttpBody(buffer);
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
                 throw new MalformedHttpRequestException(e);
             }

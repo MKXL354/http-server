@@ -5,9 +5,8 @@ import org.example.model.response.HttpResponse;
 import org.example.server.socket.ClientSocket;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 
 /**
  * @author Mehdi Kamali
@@ -22,7 +21,7 @@ public class HttpResponseWriterImpl implements HttpResponseWriter {
 
     @Override
     public void writeHttpResponse(HttpResponse response, ClientSocket clientSocket) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+        OutputStream outputStream = clientSocket.getOutputStream();
         StringBuilder responseToWrite = new StringBuilder();
         String statusLineString = String.format("%s %d %s",
                 response.getStatusLine().getHttpVersion().getLabel(),
@@ -33,9 +32,10 @@ public class HttpResponseWriterImpl implements HttpResponseWriter {
         response.getHeaders().getHeaderMap().forEach((key, value) ->
                 responseToWrite.append(key.getValue()).append(HEADER_SEPARATOR).append(value).append(LINE_SEPARATOR));
         responseToWrite.append(LINE_SEPARATOR);
-        responseToWrite.append(response.getBody().getBodyString());
 
-        writer.write(responseToWrite.toString());
-        writer.flush();
+        byte[] statusAndHeaderBytes = responseToWrite.toString().getBytes();
+        outputStream.write(statusAndHeaderBytes);
+        outputStream.write(response.getBody().getBodyAsBytes());
+        outputStream.flush();
     }
 }

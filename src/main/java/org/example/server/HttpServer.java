@@ -58,7 +58,6 @@ public class HttpServer {
 
 //TODO: path variable support
 //TODO: util (like json modeling, static resource resolution and non-blocking file read/write)
-//TODO: static binary resources handling? binary/string body in response? write/set only one
 //TODO: TLS support?
 //TODO: config based data variables (IP, PORT, TIMEOUT, etc.) put in Beans
 //TODO: add multi-package searching to registries to allow for default and dev-defined packages

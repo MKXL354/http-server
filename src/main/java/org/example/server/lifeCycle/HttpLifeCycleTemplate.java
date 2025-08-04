@@ -44,6 +44,7 @@ public abstract class HttpLifeCycleTemplate {
                 log.warn("caught socket exception, breaking request loop", e);
                 break;
             } catch (Exception e) {
+                log.warn(e.getMessage(), e);
                 handleException(e, httpRequest, httpResponse, clientSocket);
             }
         }
