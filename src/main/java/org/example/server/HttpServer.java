@@ -56,7 +56,6 @@ public class HttpServer {
     }
 }
 
-//TODO: query param support (better request line parsing)
 //TODO: path variable support
 //TODO: util (like json modeling, static resource resolution and non-blocking file read/write)
 //TODO: static binary resources handling? binary/string body in response? write/set only one

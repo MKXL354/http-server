@@ -60,12 +60,27 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         if (method == null) {
             throw new MalformedHttpRequestException();
         }
-        RequestPath path = new RequestPath(sections[1]);
+        RequestPath path = readRequestPath(sections[1]);
         HttpVersion version = HttpVersion.getByLabel(sections[2]);
         if (version == null) {
             throw new MalformedHttpRequestException();
         }
         return new RequestLine(method, path, version);
+    }
+
+    private RequestPath readRequestPath(String line) throws MalformedHttpRequestException {
+        String[] sections = line.split("\\?", 2);
+        RequestPath requestPath = new RequestPath(sections[0]);
+        if (sections.length == 2) {
+            for (String param : sections[1].split("&")) {
+                String[] keyValuePair = param.split("=", 2);
+                if (keyValuePair.length != 2) {
+                    throw new MalformedHttpRequestException();
+                }
+                requestPath.addQueryParameter(keyValuePair[0], keyValuePair[1]);
+            }
+        }
+        return requestPath;
     }
 
     private HttpHeaders readHttpHeaders(BufferedReader input) throws MalformedHttpRequestException, IOException {
@@ -111,3 +126,4 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         return null;
     }
 }
+//TODO: MalformedHttpRequestException informative messages?
