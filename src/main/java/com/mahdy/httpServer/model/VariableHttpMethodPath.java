@@ -16,4 +16,14 @@ public class VariableHttpMethodPath extends HttpMethodPath {
         super(httpMethod, path);
         this.pathSegments = pathSegments;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

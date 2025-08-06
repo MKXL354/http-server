@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,12 +17,10 @@ import java.util.List;
  * @author Mehdi Kamali
  * @since 01/08/2025
  */
-@Component
 @RequiredArgsConstructor
 public class MiddlewareRegistryImpl implements MiddlewareRegistry {
 
-
-    private final String BASE_PACKAGE = "com.mahdy.httpServer.middleware";
+    private final List<String> basePackages;
 
     private final AnnotationScanner annotationScanner;
     private final ApplicationContext applicationContext;
@@ -41,14 +38,14 @@ public class MiddlewareRegistryImpl implements MiddlewareRegistry {
     }
 
     private <T extends ProcessMiddleware> T getChainStart(Class<T> type) {
-        List<Class<? extends T>> preProcessorClasses = new ArrayList<>(annotationScanner.scanForType(type,
-                BASE_PACKAGE, Middleware.class));
+        List<Class<? extends T>> preProcessorClasses = annotationScanner.scanForType(type,
+                basePackages, Middleware.class);
         HashMap<Integer, Class<?>> seenOrders = new HashMap<>();
         for (Class<?> clazz : preProcessorClasses) {
             Integer order = clazz.getAnnotation(Middleware.class).order();
             if (seenOrders.containsKey(order)) {
                 throw new DuplicateMiddlewareOrderRegisteredException(String.format(
-                        "Duplicate Middlewares %s and %s registered for order value: %d ", seenOrders.get(order).getCanonicalName(), clazz.getCanonicalName(), order)
+                        "duplicate Middlewares %s and %s registered for order value: %d ", seenOrders.get(order).getCanonicalName(), clazz.getCanonicalName(), order)
                 );
             }
             seenOrders.put(order, clazz);

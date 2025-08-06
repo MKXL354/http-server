@@ -56,10 +56,11 @@ public class HttpServer {
     }
 }
 
-//TODO: util (like json modeling, static resource resolution? and non-blocking file read/write?)
-//TODO: TLS support?
+//TODO: MalformedHttpRequestException informative messages?
 //TODO: config based data variables (IP, PORT, TIMEOUT, etc.) put in Beans
-//TODO: add multi-package searching to registries to allow for default and dev-defined packages
-//TODO: @Bean (with naming to avoid dupe) instead of @Component for customization? and auto-config?
+//TODO: examples in SimpleFullControlProcessor for features
+//TODO: TLS support
+//TODO: make changes so that exception handler does not need to write so many things?
+//TODO: util (like json modeling, static resource resolution? and non-blocking file read/write?)
 //TODO: integrate middleware and processors -> non-full handler types? extension/calling another class?
-//TODO: Spring style @Request annotations? justify LifeCycleTemplate and subclasses? or strategy?
+//TODO: Spring style @Request annotation family? justify LifeCycleTemplate and subclasses? or strategy?

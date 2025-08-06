@@ -52,4 +52,3 @@ public class DefaultExceptionHandler {
         headerMap.put(HttpHeader.CONTENT_LENGTH, String.valueOf(response.getBody().getBodyAsBytes().length));
     }
 }
-//TODO: make changes so that exception handler does not need to write so many things?

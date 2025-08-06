@@ -8,8 +8,8 @@ import org.springframework.core.type.filter.RegexPatternTypeFilter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -19,45 +19,46 @@ import java.util.regex.Pattern;
 public class SpringAnnotationScanner implements AnnotationScanner {
 
     @Override
-    public <T> Set<Class<? extends T>> scanForType(Class<T> type, String basePackage, Class<? extends Annotation> annotationClass) throws AnnotationScannerException {
+    public <T> List<Class<? extends T>> scanForType(Class<T> type, List<String> basePackages, Class<? extends Annotation> annotationClass) throws AnnotationScannerException {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(annotationClass));
-        Set<BeanDefinition> candidateComponents = scanner.findCandidateComponents(basePackage);
 
-        Set<Class<? extends T>> result = new HashSet<>();
-        for (BeanDefinition bean : candidateComponents) {
-            try {
-                Class<?> clazz = Class.forName(bean.getBeanClassName());
-                if (type.isAssignableFrom(clazz)) {
-                    result.add(clazz.asSubclass(type));
+        List<Class<? extends T>> classes = new ArrayList<>();
+        for (String basePackage : basePackages) {
+            for (BeanDefinition bean : scanner.findCandidateComponents(basePackage)) {
+                try {
+                    Class<?> clazz = Class.forName(bean.getBeanClassName());
+                    if (type.isAssignableFrom(clazz)) {
+                        classes.add(clazz.asSubclass(type));
+                    }
+                } catch (ClassNotFoundException e) {
+                    throw new AnnotationScannerException("could not load class: " + bean.getBeanClassName(), e);
                 }
-            } catch (ClassNotFoundException e) {
-                throw new AnnotationScannerException("Could not load class: " + bean.getBeanClassName(), e);
             }
         }
-        return result;
+        return classes;
     }
 
     @Override
-    public Set<Method> scanForMethods(String basePackage, Class<? extends Annotation> annotationClass) throws AnnotationScannerException {
+    public List<Method> scanForMethods(List<String> basePackages, Class<? extends Annotation> annotationClass) throws AnnotationScannerException {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(".*")));
 
-        Set<Method> methods = new HashSet<>();
-        Set<BeanDefinition> candidateComponents = scanner.findCandidateComponents(basePackage);
-        for (BeanDefinition bean : candidateComponents) {
-            try {
-                Class<?> clazz = Class.forName(bean.getBeanClassName());
-                for (Method method : clazz.getDeclaredMethods()) {
-                    if (method.isAnnotationPresent(annotationClass)) {
-                        methods.add(method);
+        List<Method> methods = new ArrayList<>();
+        for (String basePackage : basePackages) {
+            for (BeanDefinition bean : scanner.findCandidateComponents(basePackage)) {
+                try {
+                    Class<?> clazz = Class.forName(bean.getBeanClassName());
+                    for (Method method : clazz.getDeclaredMethods()) {
+                        if (method.isAnnotationPresent(annotationClass)) {
+                            methods.add(method);
+                        }
                     }
+                } catch (ClassNotFoundException e) {
+                    throw new AnnotationScannerException("could not load class: " + bean.getBeanClassName(), e);
                 }
-            } catch (ClassNotFoundException e) {
-                throw new AnnotationScannerException("Could not load class: " + bean.getBeanClassName(), e);
             }
         }
-
         return methods;
     }
 }

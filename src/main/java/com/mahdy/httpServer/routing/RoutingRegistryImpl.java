@@ -13,10 +13,10 @@ import com.mahdy.httpServer.validation.handler.ProcessorMethodValidator;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,23 +25,22 @@ import java.util.stream.Collectors;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 @RequiredArgsConstructor
 public class RoutingRegistryImpl implements RoutingRegistry {
 
-    private final String BASE_PACKAGE = "com.mahdy.httpServer.routing";
-
-    private final Map<HttpMethodPath, HandlerMethod> staticPaths = new HashMap<>();
-    private final Map<VariableHttpMethodPath, HandlerMethod> variablePaths = new HashMap<>();
+    private final List<String> basePackages;
 
     private final AnnotationScanner annotationScanner;
     private final ApplicationContext applicationContext;
     private final ProcessorMethodValidator processorMethodValidator;
 
+    private final Map<HttpMethodPath, HandlerMethod> staticPaths = new HashMap<>();
+    private final Map<VariableHttpMethodPath, HandlerMethod> variablePaths = new HashMap<>();
+
     @PostConstruct
     @Override
     public void fillRegistry() {
-        Set<Method> methods = annotationScanner.scanForMethods(BASE_PACKAGE, Routing.class);
+        List<Method> methods = annotationScanner.scanForMethods(basePackages, Routing.class);
         for (Method method : methods) {
             Routing request = method.getAnnotation(Routing.class);
             Object instance = applicationContext.getBean(method.getDeclaringClass());

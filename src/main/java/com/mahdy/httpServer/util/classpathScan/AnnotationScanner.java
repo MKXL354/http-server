@@ -4,7 +4,7 @@ import com.mahdy.httpServer.exception.AnnotationScannerException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Mehdi Kamali
@@ -12,8 +12,8 @@ import java.util.Set;
  */
 public interface AnnotationScanner {
 
-    <T> Set<Class<? extends T>> scanForType(Class<T> type, String basePackage, Class<? extends Annotation> annotationClass)
+    <T> List<Class<? extends T>> scanForType(Class<T> type, List<String> basePackages, Class<? extends Annotation> annotationClass)
             throws AnnotationScannerException;
 
-    Set<Method> scanForMethods(String basePackage, Class<? extends Annotation> annotationClass) throws AnnotationScannerException;
+    List<Method> scanForMethods(List<String> basePackages, Class<? extends Annotation> annotationClass) throws AnnotationScannerException;
 }
