@@ -14,12 +14,4 @@ import java.util.Map;
 public class HttpHeaders {
 
     private final Map<HttpHeader, String> headerMap = new HashMap<>();
-
-    public void addHeader(HttpHeader header, String value) {
-        headerMap.put(header, value);
-    }
-
-    public String getHeaderValue(HttpHeader header) {
-        return headerMap.get(header);
-    }
 }

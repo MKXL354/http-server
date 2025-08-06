@@ -33,14 +33,14 @@ public class SimpleFullControlProcessor {
     public void processGetIndexHtml(HttpRequest httpRequest, HttpResponse httpResponse) throws ResourceNotFoundException {
         byte[] bytes = readStaticResource("index.html");
         httpResponse.setBody(new HttpBody(bytes));
-        httpResponse.getHeaders().addHeader(HttpHeader.CONTENT_TYPE, HttpContentType.HTML.getValue());
+        httpResponse.getHeaders().getHeaderMap().put(HttpHeader.CONTENT_TYPE, HttpContentType.HTML.getValue());
     }
 
     @Routing(httpMethod = HttpMethod.GET, path = "/favicon.ico")
     public void processGetFavIcon(HttpRequest httpRequest, HttpResponse httpResponse) throws ResourceNotFoundException {
         byte[] bytes = readStaticResource("favicon.ico");
         httpResponse.setBody(new HttpBody(bytes));
-        httpResponse.getHeaders().addHeader(HttpHeader.CONTENT_TYPE, HttpContentType.IMAGE_X_ICON.getValue());
+        httpResponse.getHeaders().getHeaderMap().put(HttpHeader.CONTENT_TYPE, HttpContentType.IMAGE_X_ICON.getValue());
     }
 
     private byte[] readStaticResource(String fileName) throws ResourceNotFoundException {

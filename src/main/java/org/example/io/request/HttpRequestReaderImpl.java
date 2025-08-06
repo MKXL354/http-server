@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 /**
  * @author Mehdi Kamali
@@ -88,6 +89,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
     private HttpHeaders readHttpHeaders(BufferedReader inputReader) throws MalformedHttpRequestException, IOException {
         String line;
         HttpHeaders headers = new HttpHeaders();
+        Map<HttpHeader, String> headerMap = headers.getHeaderMap();
         while ((line = inputReader.readLine()) != null && !line.isBlank()) {
             int colonIndex = line.indexOf(":");
             if (colonIndex == -1) {
@@ -97,20 +99,20 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
             if (key == null) {
                 continue;
             }
-            if (headers.getHeaderValue(key) != null) {
+            if (headerMap.get(key) != null) {
                 throw new MalformedHttpRequestException();
             }
             String value = line.substring(colonIndex + 1).trim();
             if (value.isEmpty()) {
                 throw new MalformedHttpRequestException();
             }
-            headers.addHeader(key, value);
+            headerMap.put(key, value);
         }
         return headers;
     }
 
     private HttpBody readHttpBody(HttpHeaders headers, InputStream inputReader) throws MalformedHttpRequestException, IOException {
-        String contentLengthValue = headers.getHeaderValue(HttpHeader.CONTENT_LENGTH);
+        String contentLengthValue = headers.getHeaderMap().get(HttpHeader.CONTENT_LENGTH);
         if (contentLengthValue != null) {
             try {
                 int contentLength = Integer.parseInt(contentLengthValue);

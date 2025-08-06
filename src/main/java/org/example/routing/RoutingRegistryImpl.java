@@ -62,7 +62,7 @@ public class RoutingRegistryImpl implements RoutingRegistry {
     private void register(HttpMethod method, String path, HandlerMethod handlerMethod) {
         processorMethodValidator.checkIsValid(handlerMethod);
         if (path.contains("{")) {
-            variablePaths.put(new VariableHttpMethodPath(method, path.split("/")), handlerMethod);
+            variablePaths.put(new VariableHttpMethodPath(method, path, path.split("/")), handlerMethod);
         } else {
             staticPaths.put(new HttpMethodPath(method, path), handlerMethod);
         }

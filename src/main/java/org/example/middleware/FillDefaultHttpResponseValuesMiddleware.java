@@ -21,6 +21,6 @@ public class FillDefaultHttpResponseValuesMiddleware extends PreProcessMiddlewar
         StatusLine statusLine = new StatusLine(httpRequest.getRequestLine().getHttpVersion(), HttpResponseStatus.OK);
         httpResponse.setStatusLine(statusLine);
         httpResponse.setBody(new HttpBody(""));
-        httpResponse.getHeaders().addHeader(HttpHeader.CONTENT_TYPE, HttpContentType.PLAIN_TEXT.getValue());
+        httpResponse.getHeaders().getHeaderMap().put(HttpHeader.CONTENT_TYPE, HttpContentType.PLAIN_TEXT.getValue());
     }
 }

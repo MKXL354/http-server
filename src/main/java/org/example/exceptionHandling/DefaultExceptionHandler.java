@@ -14,6 +14,8 @@ import org.example.model.response.HttpResponse;
 import org.example.model.response.StatusLine;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * @author Mehdi Kamali
  * @since 30/07/2025
@@ -45,8 +47,9 @@ public class DefaultExceptionHandler {
         HttpVersion httpVersion = request != null ? request.getRequestLine().getHttpVersion() : HttpVersion.HTTP1_1;
         response.setStatusLine(new StatusLine(httpVersion, responseStatus));
         response.setBody(new HttpBody(responseStatus.getMessage()));
-        response.getHeaders().addHeader(HttpHeader.CONTENT_TYPE, HttpContentType.PLAIN_TEXT.getValue());
-        response.getHeaders().addHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(response.getBody().getBodyAsBytes().length));
+        Map<HttpHeader, String> headerMap = response.getHeaders().getHeaderMap();
+        headerMap.put(HttpHeader.CONTENT_TYPE, HttpContentType.PLAIN_TEXT.getValue());
+        headerMap.put(HttpHeader.CONTENT_LENGTH, String.valueOf(response.getBody().getBodyAsBytes().length));
     }
 }
 //TODO: make changes so that exception handler does not need to write so many things?
