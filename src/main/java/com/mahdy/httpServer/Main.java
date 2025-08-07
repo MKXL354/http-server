@@ -1,6 +1,6 @@
 //package com.mahdy.httpServer;
 //
-//import com.mahdy.httpServer.server.HttpServerLauncher;
+//import org.springframework.boot.SpringApplication;
 //import org.springframework.boot.autoconfigure.SpringBootApplication;
 //
 //
@@ -8,6 +8,6 @@
 //public class Main {
 //
 //    public static void main(String[] args) {
-//        HttpServerLauncher.start(args);
+//        SpringApplication.run(Main.class, args);
 //    }
 //}

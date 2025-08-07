@@ -56,7 +56,6 @@ public class HttpServer {
     }
 }
 
-//TODO: MalformedHttpRequestException informative messages?
 //TODO: config based data variables (IP, PORT, TIMEOUT, etc.) put in Beans
 //TODO: examples in SimpleFullControlProcessor for features
 //TODO: TLS support

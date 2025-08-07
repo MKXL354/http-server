@@ -1,5 +1,6 @@
 package com.mahdy.httpServer.server.socket;
 
+import com.mahdy.httpServer.exception.base.ApplicationRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ public class ServerSocketImpl implements ServerSocket {
         try {
             serverSocket = new java.net.ServerSocket(PORT);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 

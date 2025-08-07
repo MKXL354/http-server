@@ -53,20 +53,20 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
             return null;
         }
         if (!StringUtils.hasText(line)) {
-            throw new MalformedHttpRequestException();
+            throw new MalformedHttpRequestException("request line should not be empty");
         }
         String[] sections = line.split(" ");
         if (sections.length != 3) {
-            throw new MalformedHttpRequestException();
+            throw new MalformedHttpRequestException("request line should contain three sections");
         }
         HttpMethod method = HttpMethod.getByValue(sections[0]);
         if (method == null) {
-            throw new MalformedHttpRequestException();
+            throw new MalformedHttpRequestException("http method " + sections[0] + " not recognized");
         }
         RequestPath path = readRequestPath(sections[1]);
         HttpVersion version = HttpVersion.getByLabel(sections[2]);
         if (version == null) {
-            throw new MalformedHttpRequestException();
+            throw new MalformedHttpRequestException("http version " + sections[2] + " not recognized");
         }
         return new RequestLine(method, path, version);
     }
@@ -78,7 +78,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
             for (String param : sections[1].split("&")) {
                 String[] keyValuePair = param.split("=", 2);
                 if (keyValuePair.length != 2) {
-                    throw new MalformedHttpRequestException();
+                    throw new MalformedHttpRequestException("query parameter " + keyValuePair[0] + " not formatted correctly");
                 }
                 requestPath.getQueryParameters().put(keyValuePair[0], keyValuePair[1]);
             }
@@ -93,18 +93,18 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         while ((line = inputReader.readLine()) != null && !line.isBlank()) {
             int colonIndex = line.indexOf(":");
             if (colonIndex == -1) {
-                throw new MalformedHttpRequestException();
+                throw new MalformedHttpRequestException("header " + line + " not formatted correctly");
             }
             HttpHeader key = HttpHeader.getByValue(line.substring(0, colonIndex).trim());
             if (key == null) {
                 continue;
             }
             if (headerMap.get(key) != null) {
-                throw new MalformedHttpRequestException();
+                throw new MalformedHttpRequestException("header " + key + " has duplicate values");
             }
             String value = line.substring(colonIndex + 1).trim();
             if (value.isEmpty()) {
-                throw new MalformedHttpRequestException();
+                throw new MalformedHttpRequestException("header " + key + " has no value");
             }
             headerMap.put(key, value);
         }
@@ -117,7 +117,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
             try {
                 int contentLength = Integer.parseInt(contentLengthValue);
                 if (contentLength > MAX_CONTENT_LENGTH) {
-                    throw new MalformedHttpRequestException();
+                    throw new MalformedHttpRequestException("content length " + contentLengthValue + " exceeds maximum " + MAX_CONTENT_LENGTH);
                 }
                 byte[] buffer = new byte[contentLength];
                 int bytesRead = 0;
@@ -127,11 +127,12 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
                     bytesRead += actualRead;
                 }
                 if (bytesRead != contentLength) {
-                    throw new MalformedHttpRequestException();
+                    throw new MalformedHttpRequestException("actual bytes read " + bytesRead +
+                            " is not equal to expected content length " + contentLength);
                 }
                 return new HttpBody(buffer);
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                throw new MalformedHttpRequestException(e);
+                throw new MalformedHttpRequestException(contentLengthValue + " has invalid value");
             }
         }
         return null;

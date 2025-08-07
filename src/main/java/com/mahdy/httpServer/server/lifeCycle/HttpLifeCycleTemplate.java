@@ -4,6 +4,7 @@ import com.mahdy.httpServer.exceptionHandling.ExceptionHandlingRegistry;
 import com.mahdy.httpServer.io.request.HttpRequestReader;
 import com.mahdy.httpServer.io.response.HttpResponseWriter;
 import com.mahdy.httpServer.model.HandlerMethod;
+import com.mahdy.httpServer.model.enumeration.HttpHeader;
 import com.mahdy.httpServer.model.request.HttpRequest;
 import com.mahdy.httpServer.model.response.HttpResponse;
 import com.mahdy.httpServer.server.socket.ClientSocket;
@@ -58,6 +59,7 @@ public abstract class HttpLifeCycleTemplate {
     private void handleException(Exception e, HttpRequest httpRequest, HttpResponse httpResponse, ClientSocket clientSocket) {
         HandlerMethod exceptionHandler = exceptionHandlingRegistry.getHandler(e.getClass());
         exceptionHandler.invokeWithoutResults(e, httpRequest, httpResponse);
+        httpResponse.getHeaders().getHeaderMap().put(HttpHeader.CONTENT_LENGTH, String.valueOf(httpResponse.getBody().getBodyAsBytes().length));
         try {
             httpResponseWriter.writeHttpResponse(httpResponse, clientSocket);
         } catch (IOException ex) {
