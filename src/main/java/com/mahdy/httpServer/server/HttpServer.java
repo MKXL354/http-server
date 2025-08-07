@@ -56,7 +56,6 @@ public class HttpServer {
     }
 }
 
-//TODO: examples in SimpleFullControlProcessor for features
 //TODO: TLS support
 //TODO: util (like json modeling, static resource resolution? and non-blocking file read/write?)
 //TODO: integrate middleware and processors -> non-full handler types? extension/calling another class?

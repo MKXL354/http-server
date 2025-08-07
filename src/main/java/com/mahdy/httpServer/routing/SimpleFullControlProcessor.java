@@ -24,9 +24,27 @@ import java.nio.file.Paths;
 @Component
 public class SimpleFullControlProcessor {
 
-    @Routing(httpMethod = HttpMethod.GET, path = "/")
+    @Routing(httpMethod = HttpMethod.GET, path = "/request")
     public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
         httpResponse.setBody(new HttpBody(httpRequest.toString()));
+    }
+
+    @Routing(httpMethod = HttpMethod.GET, path = "/query")
+    public void processQueryParams(HttpRequest httpRequest, HttpResponse httpResponse) {
+        StringBuilder queryParams = new StringBuilder();
+        httpRequest.getRequestLine().getRequestPath().getQueryParameters().forEach((key, value) -> {
+            queryParams.append(key).append(" = ").append(value).append("\r\n");
+        });
+        httpResponse.setBody(new HttpBody(queryParams.toString()));
+    }
+
+    @Routing(httpMethod = HttpMethod.GET, path = "/variable/{variable}/value/{value}")
+    public void processPathVariables(HttpRequest httpRequest, HttpResponse httpResponse) {
+        StringBuilder pathVariables = new StringBuilder();
+        httpRequest.getRequestLine().getRequestPath().getPathVariables().forEach((key, value) -> {
+            pathVariables.append("{").append(key).append("}").append(" -> ").append(value).append("\r\n");
+        });
+        httpResponse.setBody(new HttpBody(pathVariables.toString()));
     }
 
     @Routing(httpMethod = HttpMethod.GET, path = "/index.html")
