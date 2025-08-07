@@ -16,12 +16,12 @@ import java.lang.reflect.Modifier;
 @Component
 public class ExceptionHandlerMethodValidatorImpl implements ExceptionHandlerMethodValidator {
 
-    private final String HANDLER_METHOD_STRUCTURE = "public void <name>(Exception <param1>, HttpRequest <param2>, HttpResponse <param3>)";
+    private final String METHOD_STRUCTURE = "public void <name>(Exception <param1>, HttpRequest <param2>, HttpResponse <param3>)";
 
     @Override
     public void checkIsValid(HandlerMethod handlerMethod) {
         if (!isValid(handlerMethod)) {
-            throw new HandlerMethodInvalidFormatException("exception handler method does not follow structure " + HANDLER_METHOD_STRUCTURE);
+            throw new HandlerMethodInvalidFormatException("exception handler method does not follow structure " + METHOD_STRUCTURE);
         }
     }
 

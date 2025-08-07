@@ -1,7 +1,9 @@
 package com.mahdy.httpServer.server.socket;
 
 import com.mahdy.httpServer.exception.base.ApplicationRuntimeException;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,11 +17,15 @@ import java.net.Socket;
 @Slf4j
 public class ServerSocketImpl implements ServerSocket {
 
-    private final int PORT = 8080;
+    @Value("${http.server.socket.port}")
+    private int PORT;
+    @Value("${http.server.socket.timeout}")
+    private int SOCKET_TIMEOUT;
 
-    private final java.net.ServerSocket serverSocket;
+    private java.net.ServerSocket serverSocket;
 
-    public ServerSocketImpl() {
+    @PostConstruct
+    public void start() {
         try {
             serverSocket = new java.net.ServerSocket(PORT);
         } catch (IOException e) {
@@ -30,7 +36,7 @@ public class ServerSocketImpl implements ServerSocket {
     @Override
     public ClientSocket acceptConnection() throws IOException {
         Socket socket = serverSocket.accept();
-        return new ClientSocketImpl(socket);
+        return new ClientSocketImpl(socket, SOCKET_TIMEOUT);
     }
 
     @Override

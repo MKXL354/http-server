@@ -16,12 +16,12 @@ import java.lang.reflect.Modifier;
 @Component
 public class FullControlProcessorMethodValidator implements ProcessorMethodValidator {
 
-    private final String PROCESSOR_METHOD_STRUCTURE = "public void <name>(HttpRequest <param1>, HttpResponse <param2>)";
+    private final String METHOD_STRUCTURE = "public void <name>(HttpRequest <param1>, HttpResponse <param2>)";
 
     @Override
     public void checkIsValid(HandlerMethod handlerMethod) {
         if (!isValid(handlerMethod)) {
-            throw new HandlerMethodInvalidFormatException("processor method does not follow structure " + PROCESSOR_METHOD_STRUCTURE);
+            throw new HandlerMethodInvalidFormatException("processor method does not follow structure " + METHOD_STRUCTURE);
         }
     }
 

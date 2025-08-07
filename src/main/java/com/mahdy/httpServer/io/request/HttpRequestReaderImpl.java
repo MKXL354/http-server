@@ -12,6 +12,7 @@ import com.mahdy.httpServer.model.request.RequestLine;
 import com.mahdy.httpServer.model.request.RequestPath;
 import com.mahdy.httpServer.server.socket.ClientSocket;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,7 +30,8 @@ import java.util.Map;
 @Slf4j
 public class HttpRequestReaderImpl implements HttpRequestReader {
 
-    private final int MAX_CONTENT_LENGTH = 65536;
+    @Value("${http.server.http.max-content-length}")
+    private int MAX_CONTENT_LENGTH;
 
     @Override
     public HttpRequest readHttpRequest(ClientSocket clientSocket) throws MalformedHttpRequestException, IOException {

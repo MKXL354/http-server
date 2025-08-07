@@ -13,13 +13,11 @@ import java.net.SocketException;
  */
 public class ClientSocketImpl implements ClientSocket {
 
-    private final int SOCKET_TIMEOUT = 15000;
-
     private final Socket clientSocket;
 
-    public ClientSocketImpl(Socket clientSocket) throws SocketException {
+    public ClientSocketImpl(Socket clientSocket, int socketTimeout) throws SocketException {
         this.clientSocket = clientSocket;
-        clientSocket.setSoTimeout(SOCKET_TIMEOUT);
+        this.clientSocket.setSoTimeout(socketTimeout);
     }
 
     @Override
