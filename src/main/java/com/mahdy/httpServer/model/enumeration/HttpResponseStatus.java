@@ -1,39 +1,48 @@
 package com.mahdy.httpServer.model.enumeration;
 
-import lombok.Getter;
-
-import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Getter
-public enum HttpResponseStatus {
+public final class HttpResponseStatus {
 
-    OK(200, "Ok"),
-    BAD_REQUEST(400, "Bad Request"),
-    NOT_FOUND(404, "Not Found"),
-    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
+    private static final Map<HttpResponseStatusKey, HttpResponseStatus> REGISTRY = new ConcurrentHashMap<>();
 
-    private final int code;
-    private final String reasonPhrase;
+    private final HttpResponseStatusKey key;
 
-    HttpResponseStatus(int code, String reasonPhrase) {
-        this.code = code;
-        this.reasonPhrase = reasonPhrase;
+    private HttpResponseStatus(HttpResponseStatusKey key) {
+        this.key = key;
+    }
+
+    public static HttpResponseStatus of(int code, String reasonPhrase) {
+        String normalized = reasonPhrase.trim().toLowerCase();
+        HttpResponseStatusKey responseStatusKey = new HttpResponseStatusKey(code, normalized);
+        return REGISTRY.computeIfAbsent(responseStatusKey, key -> new HttpResponseStatus(responseStatusKey));
+    }
+
+    public int getCode() {
+        return key.getCode();
+    }
+
+    public String getReasonPhrase() {
+        return key.getReasonPhrase();
     }
 
     public String getMessage() {
-        return code + " " + reasonPhrase;
+        return key.getCode() + " " + key.getReasonPhrase();
     }
 
-    public static HttpResponseStatus getByCode(int code) {
-        return Arrays.stream(HttpResponseStatus.values()).filter(v -> v.code == code).findFirst().orElse(null);
-    }
+    public static final HttpResponseStatus OK = HttpResponseStatus.of(200, "Ok");
+    public static final HttpResponseStatus BAD_REQUEST = HttpResponseStatus.of(400, "Bad Request");
+    public static final HttpResponseStatus NOT_FOUND = HttpResponseStatus.of(404, "Not Found");
+    public static final HttpResponseStatus METHOD_NOT_ALLOWED = HttpResponseStatus.of(405, "Method Not Allowed");
+    public static final HttpResponseStatus INTERNAL_SERVER_ERROR = HttpResponseStatus.of(500, "Internal Server Error");
 
-    public static HttpResponseStatus getByReasonPhrase(String reasonPhrase) {
-        return Arrays.stream(HttpResponseStatus.values()).filter(v -> v.reasonPhrase.equals(reasonPhrase)).findFirst().orElse(null);
+    @Override
+    public String toString() {
+        return key.toString();
     }
 }

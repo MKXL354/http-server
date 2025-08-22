@@ -61,12 +61,12 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
         if (sections.length != 3) {
             throw new MalformedHttpRequestException("request line should contain three sections");
         }
-        HttpMethod method = HttpMethod.getByValue(sections[0]);
+        HttpMethod method = HttpMethod.of(sections[0]);
         if (method == null) {
             throw new MalformedHttpRequestException("http method " + sections[0] + " not recognized");
         }
         RequestPath path = readRequestPath(sections[1]);
-        HttpVersion version = HttpVersion.getByLabel(sections[2]);
+        HttpVersion version = HttpVersion.of(sections[2]);
         if (version == null) {
             throw new MalformedHttpRequestException("http version " + sections[2] + " not recognized");
         }
@@ -97,10 +97,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
             if (colonIndex == -1) {
                 throw new MalformedHttpRequestException("header " + line + " not formatted correctly");
             }
-            HttpHeader key = HttpHeader.getByValue(line.substring(0, colonIndex).trim());
-            if (key == null) {
-                continue;
-            }
+            HttpHeader key = HttpHeader.of(line.substring(0, colonIndex).trim());
             if (headerMap.get(key) != null) {
                 throw new MalformedHttpRequestException("header " + key + " has duplicate values");
             }

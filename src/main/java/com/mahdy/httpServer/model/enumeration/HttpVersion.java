@@ -22,7 +22,7 @@ public enum HttpVersion {
         this.label = label;
     }
 
-    public static HttpVersion getByLabel(String label) {
+    public static HttpVersion of(String label) {
         return Arrays.stream(HttpVersion.values()).filter(v -> v.label.equals(label)).findFirst().orElse(null);
     }
 }

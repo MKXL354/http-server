@@ -18,7 +18,7 @@ public class FillHttpRequestContextMiddleware extends PreProcessMiddleware {
 
     @Override
     public void preProcess(HttpRequest httpRequest, HttpResponse httpResponse) {
-        HttpConnection connectionHeaderValue = HttpConnection.getByValue(httpRequest.getHeaders().getHeaderMap().get(HttpHeader.CONNECTION));
+        HttpConnection connectionHeaderValue = HttpConnection.of(httpRequest.getHeaders().getHeaderMap().get(HttpHeader.CONNECTION));
         boolean isConnectionKeptAlive;
         if (connectionHeaderValue == null) {
             isConnectionKeptAlive = !httpRequest.getRequestLine().getHttpVersion().equals(HttpVersion.HTTP1);

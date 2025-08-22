@@ -1,27 +1,38 @@
 package com.mahdy.httpServer.model.enumeration.header;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Mehdi Kamali
  * @since 28/07/2025
  */
-@Getter
-public enum HttpContentType {
+@EqualsAndHashCode
+public final class HttpContentType {
 
-    PLAIN_TEXT("text/plain"),
-    IMAGE_X_ICON("image/x-icon"),
-    HTML("text/html");
+    private static final Map<String, HttpContentType> REGISTRY = new ConcurrentHashMap<>();
 
+    @Getter
     private final String value;
 
-    HttpContentType(String value) {
+    private HttpContentType(String value) {
         this.value = value;
     }
 
-    public static HttpContentType getByValue(String value) {
-        return Arrays.stream(HttpContentType.values()).filter(v -> v.value.equals(value)).findFirst().orElse(null);
+    public static HttpContentType of(String value) {
+        String normalized = value.trim().toLowerCase();
+        return REGISTRY.computeIfAbsent(normalized, HttpContentType::new);
+    }
+
+    public static final HttpContentType PLAIN_TEXT = HttpContentType.of("text/plain");
+    public static final HttpContentType HTML = HttpContentType.of("text/html");
+    public static final HttpContentType IMAGE_X_ICON = HttpContentType.of("image/x-icon");
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

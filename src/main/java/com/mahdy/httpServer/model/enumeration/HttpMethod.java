@@ -14,7 +14,7 @@ public enum HttpMethod {
     PATCH,
     DELETE;
 
-    public static HttpMethod getByValue(String value) {
+    public static HttpMethod of(String value) {
         return Arrays.stream(HttpMethod.values()).filter(m -> m.toString().equals(value)).findFirst().orElse(null);
     }
 }

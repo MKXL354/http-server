@@ -20,7 +20,7 @@ public enum HttpConnection {
         this.value = value;
     }
 
-    public static HttpConnection getByValue(String value) {
+    public static HttpConnection of(String value) {
         return Arrays.stream(HttpConnection.values()).filter(v -> v.value.equals(value)).findFirst().orElse(null);
     }
 }

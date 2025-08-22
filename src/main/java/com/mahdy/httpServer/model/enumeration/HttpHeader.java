@@ -1,30 +1,41 @@
 package com.mahdy.httpServer.model.enumeration;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Getter
-public enum HttpHeader {
+@EqualsAndHashCode
+public final class HttpHeader {
 
-    HOST("Host"),
-    USER_AGENT("User-Agent"),
-    ACCEPT("Accept"),
-    CONTENT_LENGTH("Content-Length"),
-    CONTENT_TYPE("Content-Type"),
-    CONNECTION("Connection");
+    private static final Map<String, HttpHeader> REGISTRY = new ConcurrentHashMap<>();
 
+    @Getter
     private final String value;
 
-    HttpHeader(String value) {
+    private HttpHeader(String value) {
         this.value = value;
     }
 
-    public static HttpHeader getByValue(String value) {
-        return Arrays.stream(HttpHeader.values()).filter(v -> v.value.equals(value)).findFirst().orElse(null);
+    public static HttpHeader of(String value) {
+        String normalized = value.trim().toLowerCase();
+        return REGISTRY.computeIfAbsent(normalized, HttpHeader::new);
+    }
+
+    public static final HttpHeader HOST = HttpHeader.of("Host");
+    public static final HttpHeader USER_AGENT = HttpHeader.of("User-Agent");
+    public static final HttpHeader ACCEPT = HttpHeader.of("Accept");
+    public static final HttpHeader CONTENT_LENGTH = HttpHeader.of("Content-Length");
+    public static final HttpHeader CONTENT_TYPE = HttpHeader.of("Content-Type");
+    public static final HttpHeader CONNECTION = HttpHeader.of("Connection");
+
+    @Override
+    public String toString() {
+        return value;
     }
 }
