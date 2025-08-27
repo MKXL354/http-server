@@ -1,6 +1,7 @@
-package com.mahdy.httpserver.core.util.classpathscan;
+package com.mahdy.httpserver.starter.spring.util.classpathscan;
 
 import com.mahdy.httpserver.core.exception.AnnotationScannerException;
+import com.mahdy.httpserver.core.util.classpathscan.AnnotationScanner;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -24,17 +25,17 @@ public class SpringAnnotationScanner implements AnnotationScanner {
         scanner.addIncludeFilter(new AnnotationTypeFilter(annotationClass));
 
         List<Class<? extends T>> classes = new ArrayList<>();
-        for (String basePackage : basePackages) {
-            for (BeanDefinition bean : scanner.findCandidateComponents(basePackage)) {
-                try {
+        try {
+            for (String basePackage : basePackages) {
+                for (BeanDefinition bean : scanner.findCandidateComponents(basePackage)) {
                     Class<?> clazz = Class.forName(bean.getBeanClassName());
                     if (type.isAssignableFrom(clazz)) {
                         classes.add(clazz.asSubclass(type));
                     }
-                } catch (ClassNotFoundException e) {
-                    throw new AnnotationScannerException("could not load class: " + bean.getBeanClassName(), e);
                 }
             }
+        } catch (Exception e) {
+            throw new AnnotationScannerException(e);
         }
         return classes;
     }
@@ -45,19 +46,19 @@ public class SpringAnnotationScanner implements AnnotationScanner {
         scanner.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(".*")));
 
         List<Method> methods = new ArrayList<>();
-        for (String basePackage : basePackages) {
-            for (BeanDefinition bean : scanner.findCandidateComponents(basePackage)) {
-                try {
+        try {
+            for (String basePackage : basePackages) {
+                for (BeanDefinition bean : scanner.findCandidateComponents(basePackage)) {
                     Class<?> clazz = Class.forName(bean.getBeanClassName());
                     for (Method method : clazz.getDeclaredMethods()) {
                         if (method.isAnnotationPresent(annotationClass)) {
                             methods.add(method);
                         }
                     }
-                } catch (ClassNotFoundException e) {
-                    throw new AnnotationScannerException("could not load class: " + bean.getBeanClassName(), e);
                 }
             }
+        } catch (Exception e) {
+            throw new AnnotationScannerException(e);
         }
         return methods;
     }

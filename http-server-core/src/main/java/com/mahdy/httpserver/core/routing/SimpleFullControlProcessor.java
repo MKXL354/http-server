@@ -8,7 +8,6 @@ import com.mahdy.httpserver.core.model.enumeration.HttpMethod;
 import com.mahdy.httpserver.core.model.enumeration.header.HttpContentType;
 import com.mahdy.httpserver.core.model.request.HttpRequest;
 import com.mahdy.httpserver.core.model.response.HttpResponse;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -21,7 +20,6 @@ import java.nio.file.Paths;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 public class SimpleFullControlProcessor {
 
     @Routing(httpMethod = HttpMethod.GET, path = "/request")

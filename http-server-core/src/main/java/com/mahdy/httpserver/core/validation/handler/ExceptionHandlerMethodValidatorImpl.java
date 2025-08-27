@@ -4,7 +4,6 @@ import com.mahdy.httpserver.core.exception.HandlerMethodInvalidFormatException;
 import com.mahdy.httpserver.core.model.HandlerMethod;
 import com.mahdy.httpserver.core.model.request.HttpRequest;
 import com.mahdy.httpserver.core.model.response.HttpResponse;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -13,7 +12,6 @@ import java.lang.reflect.Modifier;
  * @author Mehdi Kamali
  * @since 30/07/2025
  */
-@Component
 public class ExceptionHandlerMethodValidatorImpl implements ExceptionHandlerMethodValidator {
 
     private final String METHOD_STRUCTURE = "public void <name>(Exception <param1>, HttpRequest <param2>, HttpResponse <param3>)";

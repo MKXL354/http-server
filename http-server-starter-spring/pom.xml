@@ -8,21 +8,19 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>http-server-core</artifactId>
+    <artifactId>http-server-starter-spring</artifactId>
     <packaging>jar</packaging>
-    <name>http-server-core</name>
+    <name>http-server-spring-starter</name>
 
     <dependencies>
         <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.1.1</version>
+            <groupId>com.mahdy</groupId>
+            <artifactId>http-server-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.17</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,4 +1,4 @@
-package com.mahdy.httpserver.core.config;
+package com.mahdy.httpserver.starter.spring.config;
 
 import lombok.Getter;
 import lombok.Setter;

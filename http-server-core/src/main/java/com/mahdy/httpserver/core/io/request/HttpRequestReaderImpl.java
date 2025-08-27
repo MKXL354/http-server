@@ -11,10 +11,9 @@ import com.mahdy.httpserver.core.model.request.HttpRequest;
 import com.mahdy.httpserver.core.model.request.RequestLine;
 import com.mahdy.httpserver.core.model.request.RequestPath;
 import com.mahdy.httpserver.core.server.socket.ClientSocket;
+import com.mahdy.httpserver.core.util.CommonUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,12 +25,11 @@ import java.util.Map;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 @Slf4j
+@RequiredArgsConstructor
 public class HttpRequestReaderImpl implements HttpRequestReader {
 
-    @Value("${http.server.http.max-content-length}")
-    private int MAX_CONTENT_LENGTH;
+    private final int MAX_CONTENT_LENGTH;
 
     @Override
     public HttpRequest readHttpRequest(ClientSocket clientSocket) throws MalformedHttpRequestException, IOException {
@@ -54,7 +52,7 @@ public class HttpRequestReaderImpl implements HttpRequestReader {
             log.info("EOF reached");
             return null;
         }
-        if (!StringUtils.hasText(line)) {
+        if (CommonUtils.isBlank(line)) {
             throw new MalformedHttpRequestException("request line should not be empty");
         }
         String[] sections = line.split(" ");

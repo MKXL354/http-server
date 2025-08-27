@@ -12,7 +12,6 @@ import com.mahdy.httpserver.core.model.enumeration.header.HttpContentType;
 import com.mahdy.httpserver.core.model.request.HttpRequest;
 import com.mahdy.httpserver.core.model.response.HttpResponse;
 import com.mahdy.httpserver.core.model.response.StatusLine;
-import org.springframework.stereotype.Component;
 
 import static com.mahdy.httpserver.core.model.enumeration.HttpResponseStatus.*;
 
@@ -20,7 +19,6 @@ import static com.mahdy.httpserver.core.model.enumeration.HttpResponseStatus.*;
  * @author Mehdi Kamali
  * @since 30/07/2025
  */
-@Component
 public class DefaultExceptionHandler {
 
     @ExceptionHandling(Exception.class)

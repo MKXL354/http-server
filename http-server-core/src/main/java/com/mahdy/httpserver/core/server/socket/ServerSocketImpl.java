@@ -2,9 +2,8 @@ package com.mahdy.httpserver.core.server.socket;
 
 import com.mahdy.httpserver.core.exception.base.ApplicationRuntimeException;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -13,14 +12,12 @@ import java.net.Socket;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 @Slf4j
+@RequiredArgsConstructor
 public class ServerSocketImpl implements ServerSocket {
 
-    @Value("${http.server.socket.port}")
-    private int PORT;
-    @Value("${http.server.socket.timeout}")
-    private int SOCKET_TIMEOUT;
+    private final int PORT;
+    private final int SOCKET_TIMEOUT_MILLIS;
 
     private java.net.ServerSocket serverSocket;
 
@@ -36,7 +33,7 @@ public class ServerSocketImpl implements ServerSocket {
     @Override
     public ClientSocket acceptConnection() throws IOException {
         Socket socket = serverSocket.accept();
-        return new ClientSocketImpl(socket, SOCKET_TIMEOUT);
+        return new ClientSocketImpl(socket, SOCKET_TIMEOUT_MILLIS);
     }
 
     @Override

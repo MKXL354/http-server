@@ -3,7 +3,6 @@ package com.mahdy.httpserver.core.io.response;
 import com.mahdy.httpserver.core.model.response.HttpResponse;
 import com.mahdy.httpserver.core.server.socket.ClientSocket;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,7 +11,6 @@ import java.io.OutputStream;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 @Slf4j
 public class HttpResponseWriterImpl implements HttpResponseWriter {
 

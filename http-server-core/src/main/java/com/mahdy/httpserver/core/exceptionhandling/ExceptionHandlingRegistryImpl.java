@@ -1,12 +1,12 @@
 package com.mahdy.httpserver.core.exceptionhandling;
 
 import com.mahdy.httpserver.core.annotation.ExceptionHandling;
+import com.mahdy.httpserver.core.lifecycle.ObjectResolver;
 import com.mahdy.httpserver.core.model.HandlerMethod;
 import com.mahdy.httpserver.core.util.classpathscan.AnnotationScanner;
 import com.mahdy.httpserver.core.validation.handler.ExceptionHandlerMethodValidator;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public class ExceptionHandlingRegistryImpl implements ExceptionHandlingRegistry 
     private final List<String> basePackages;
 
     private final AnnotationScanner annotationScanner;
-    private final ApplicationContext applicationContext;
+    private final ObjectResolver objectResolver;
     private final ExceptionHandlerMethodValidator exceptionHandlerMethodValidator;
 
     private final Map<Class<? extends Throwable>, HandlerMethod> exceptionHandlers = new HashMap<>();
@@ -34,7 +34,7 @@ public class ExceptionHandlingRegistryImpl implements ExceptionHandlingRegistry 
         List<Method> methods = annotationScanner.scanForMethods(basePackages, ExceptionHandling.class);
         for (Method method : methods) {
             ExceptionHandling request = method.getAnnotation(ExceptionHandling.class);
-            Object instance = applicationContext.getBean(method.getDeclaringClass());
+            Object instance = objectResolver.resolveObject(method.getDeclaringClass());
             register(request.value(), new HandlerMethod(instance, method));
         }
     }

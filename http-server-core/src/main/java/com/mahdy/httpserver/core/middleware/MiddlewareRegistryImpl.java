@@ -2,11 +2,11 @@ package com.mahdy.httpserver.core.middleware;
 
 import com.mahdy.httpserver.core.annotation.Middleware;
 import com.mahdy.httpserver.core.exception.DuplicateMiddlewareOrderRegisteredException;
+import com.mahdy.httpserver.core.lifecycle.ObjectResolver;
 import com.mahdy.httpserver.core.util.classpathscan.AnnotationScanner;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,7 +23,7 @@ public class MiddlewareRegistryImpl implements MiddlewareRegistry {
     private final List<String> basePackages;
 
     private final AnnotationScanner annotationScanner;
-    private final ApplicationContext applicationContext;
+    private final ObjectResolver objectResolver;
 
     @Getter
     private PreProcessMiddleware preProcessMiddlewareChainStart;
@@ -53,7 +53,7 @@ public class MiddlewareRegistryImpl implements MiddlewareRegistry {
         preProcessorClasses.sort(Comparator.comparingInt(preProcessor -> preProcessor.getAnnotation(Middleware.class).order()));
         List<T> preProcessorObjects = new ArrayList<>();
         for (Class<? extends T> preProcessorClass : preProcessorClasses) {
-            preProcessorObjects.add(applicationContext.getBean(preProcessorClass));
+            preProcessorObjects.add(objectResolver.resolveObject(preProcessorClass));
         }
         for (int i = 0; i < preProcessorObjects.size() - 1; i++) {
             preProcessorObjects.get(i).setNext(preProcessorObjects.get(i + 1));

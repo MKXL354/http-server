@@ -3,6 +3,7 @@ package com.mahdy.httpserver.core.routing;
 import com.mahdy.httpserver.core.annotation.Routing;
 import com.mahdy.httpserver.core.exception.RequestMethodNotSupportedException;
 import com.mahdy.httpserver.core.exception.RequestPathNotFoundException;
+import com.mahdy.httpserver.core.lifecycle.ObjectResolver;
 import com.mahdy.httpserver.core.model.HandlerMethod;
 import com.mahdy.httpserver.core.model.HttpMethodPath;
 import com.mahdy.httpserver.core.model.VariableHttpMethodPath;
@@ -12,7 +13,6 @@ import com.mahdy.httpserver.core.util.classpathscan.AnnotationScanner;
 import com.mahdy.httpserver.core.validation.handler.ProcessorMethodValidator;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class RoutingRegistryImpl implements RoutingRegistry {
     private final List<String> basePackages;
 
     private final AnnotationScanner annotationScanner;
-    private final ApplicationContext applicationContext;
+    private final ObjectResolver objectResolver;
     private final ProcessorMethodValidator processorMethodValidator;
 
     private final Map<HttpMethodPath, HandlerMethod> staticPaths = new HashMap<>();
@@ -43,7 +43,7 @@ public class RoutingRegistryImpl implements RoutingRegistry {
         List<Method> methods = annotationScanner.scanForMethods(basePackages, Routing.class);
         for (Method method : methods) {
             Routing request = method.getAnnotation(Routing.class);
-            Object instance = applicationContext.getBean(method.getDeclaringClass());
+            Object instance = objectResolver.resolveObject(method.getDeclaringClass());
             register(request.httpMethod(), request.path(), new HandlerMethod(instance, method));
         }
     }

@@ -1,4 +1,4 @@
-package com.mahdy.httpserver.core.server.lifecycle;
+package com.mahdy.httpserver.core.lifecycle;
 
 import com.mahdy.httpserver.core.exceptionhandling.ExceptionHandlingRegistry;
 import com.mahdy.httpserver.core.io.request.HttpRequestReader;

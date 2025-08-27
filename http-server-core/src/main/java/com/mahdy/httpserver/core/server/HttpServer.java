@@ -2,14 +2,13 @@ package com.mahdy.httpserver.core.server;
 
 import com.mahdy.httpserver.core.executor.ServerLoopExecutionManager;
 import com.mahdy.httpserver.core.executor.TaskExecutionManager;
-import com.mahdy.httpserver.core.server.lifecycle.HttpLifeCycleTemplate;
+import com.mahdy.httpserver.core.lifecycle.HttpLifeCycleTemplate;
 import com.mahdy.httpserver.core.server.socket.ClientSocket;
 import com.mahdy.httpserver.core.server.socket.ServerSocket;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -17,7 +16,6 @@ import java.io.IOException;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 @RequiredArgsConstructor
 @Slf4j
 public class HttpServer {

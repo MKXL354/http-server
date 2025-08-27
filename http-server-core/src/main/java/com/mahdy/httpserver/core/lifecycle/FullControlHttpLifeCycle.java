@@ -1,4 +1,4 @@
-package com.mahdy.httpserver.core.server.lifecycle;
+package com.mahdy.httpserver.core.lifecycle;
 
 import com.mahdy.httpserver.core.exceptionhandling.ExceptionHandlingRegistry;
 import com.mahdy.httpserver.core.io.request.HttpRequestReader;
@@ -10,13 +10,11 @@ import com.mahdy.httpserver.core.model.request.RequestLine;
 import com.mahdy.httpserver.core.model.request.RequestPath;
 import com.mahdy.httpserver.core.model.response.HttpResponse;
 import com.mahdy.httpserver.core.routing.RoutingRegistry;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Component
 public class FullControlHttpLifeCycle extends HttpLifeCycleTemplate {
 
     private final RoutingRegistry routingRegistry;
