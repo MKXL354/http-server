@@ -4,6 +4,8 @@ import com.mahdy.httpserver.core.executor.ServerLoopExecutionManager;
 import com.mahdy.httpserver.core.executor.TaskExecutionManager;
 import com.mahdy.httpserver.core.lifecycle.HttpLifeCycleTemplate;
 import com.mahdy.httpserver.core.server.socket.ClientSocket;
+import com.mahdy.httpserver.core.server.socket.HttpServerSocket;
+import com.mahdy.httpserver.core.server.socket.HttpsServerSocket;
 import com.mahdy.httpserver.core.server.socket.ServerSocket;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -20,13 +22,23 @@ import java.io.IOException;
 @Slf4j
 public class HttpServer {
 
+    private final HttpServerProperties serverProperties;
+
     private final ServerLoopExecutionManager serverLoopExecutionManager;
     private final TaskExecutionManager taskExecutionManager;
-    private final ServerSocket serverSocket;
     private final HttpLifeCycleTemplate httpLifeCycleTemplate;
+
+    private ServerSocket serverSocket;
 
     @PostConstruct
     public void start() {
+        if (serverProperties.isHttpsEnabled()) {
+            log.info("https is enabled");
+            serverSocket = new HttpsServerSocket(serverProperties.getPort(), serverProperties.getSocketTimeoutMillis(),
+                    serverProperties.getKeyStorePath(), serverProperties.getKeyStorePassword(), serverProperties.getTlsKeyPassword());
+        } else {
+            serverSocket = new HttpServerSocket(serverProperties.getPort(), serverProperties.getSocketTimeoutMillis());
+        }
         serverLoopExecutionManager.execute(this::serverLoop);
     }
 
@@ -42,7 +54,7 @@ public class HttpServer {
     }
 
     private void serverLoop() {
-        log.info("starting to accept connection on port {} ...", serverSocket.getLocalPort());
+        log.info("starting to accept connections on port {}...", serverProperties.getPort());
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 ClientSocket clientSocket = serverSocket.acceptConnection();
@@ -55,7 +67,6 @@ public class HttpServer {
     }
 }
 
-//TODO: TLS support
-//TODO: util (like json modeling, static resource resolution? and non-blocking file read/write?)
+//TODO: an entire json modeling support as util?
 //TODO: integrate middleware and processors -> non-full handler types? extension/calling another class?
 //TODO: Spring style @Request annotation family? justify LifeCycleTemplate and subclasses? or strategy?

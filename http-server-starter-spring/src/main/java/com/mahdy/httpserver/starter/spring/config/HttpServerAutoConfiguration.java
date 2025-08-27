@@ -19,8 +19,7 @@ import com.mahdy.httpserver.core.routing.RoutingRegistry;
 import com.mahdy.httpserver.core.routing.RoutingRegistryImpl;
 import com.mahdy.httpserver.core.routing.SimpleFullControlProcessor;
 import com.mahdy.httpserver.core.server.HttpServer;
-import com.mahdy.httpserver.core.server.socket.ServerSocket;
-import com.mahdy.httpserver.core.server.socket.ServerSocketImpl;
+import com.mahdy.httpserver.core.server.HttpServerProperties;
 import com.mahdy.httpserver.core.util.classpathscan.AnnotationScanner;
 import com.mahdy.httpserver.core.util.classpathscan.CustomAnnotationScanner;
 import com.mahdy.httpserver.core.validation.handler.ExceptionHandlerMethodValidator;
@@ -60,14 +59,18 @@ public class HttpServerAutoConfiguration {
     }
 
     @Bean
-    public ServerSocket serverSocket(@Value("${http.server.socket.port}") int port, @Value("${http.server.socket.timeout}") int socketTimeoutMillis) {
-        return new ServerSocketImpl(port, socketTimeoutMillis);
+    public HttpServerProperties httpServerProperties(@Value("${http.server.socket.port}") int port, @Value("${http.server.socket.timeout}") int socketTimeoutMillis,
+                                                     @Value("${http.server.socket.https-enabled}") boolean httpsEnabled,
+                                                     @Value("${http.server.https.key-store-path}") String keyStorePath,
+                                                     @Value("${http.server.https.key-store-password}") String keyStorePassword,
+                                                     @Value("${http.server.https.tls-key-password}") String keyPassword) {
+        return new HttpServerProperties(port, socketTimeoutMillis, httpsEnabled, keyStorePath, keyStorePassword, keyPassword);
     }
 
     @Bean
-    public HttpServer httpServer(ServerLoopExecutionManager serverLoopExecutionManager, TaskExecutionManager taskExecutionManager,
-                                 ServerSocket serverSocket, HttpLifeCycleTemplate httpLifeCycleTemplate) {
-        return new HttpServer(serverLoopExecutionManager, taskExecutionManager, serverSocket, httpLifeCycleTemplate);
+    public HttpServer httpServer(HttpServerProperties serverProperties, ServerLoopExecutionManager serverLoopExecutionManager,
+                                 TaskExecutionManager taskExecutionManager, HttpLifeCycleTemplate httpLifeCycleTemplate) {
+        return new HttpServer(serverProperties, serverLoopExecutionManager, taskExecutionManager, httpLifeCycleTemplate);
     }
 
     @Bean

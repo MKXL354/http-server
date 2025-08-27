@@ -3,6 +3,10 @@
 This is an HTTP sever written from the ground up in java. It uses Spring Boot for DI, Config and Logging otherwise the
 entire web support is written manually without Spring Boot Web. This project uses Maven as dependency manager.
 
+This server supports HTTPS protocol by default and features a sample keystore + passwords. It can be configured not to
+use
+HTTPS entirely or use different keystore and password.
+
 # Usage
 
 The spring starter module added can be built with maven, added as a dependency to any other spring project and run as
@@ -29,9 +33,13 @@ interfered with and only extended in the supported ways.
 
 # Config
 
-* http.server.socket.port -> set server port number; Default is 8080.
+* http.server.socket.port -> set server port number; Default is 8443.
 * http.server.socket.timeout -> set socket timeout in milliseconds; Default is 20000.
-* http.server.http.max-content-length -> set max content length to read from requests in bytes; default is 65536
+* http.server.socket.https-enabled -> set whether to use HTTPS or not; Default is true.
+* http.server.http.max-content-length -> set max content length to read from requests in bytes; default is 65536.
+* http.server.https.key-store-path -> set keystore location for HTTPS certificate; A sample is in the client module.
+* http.server.https.key-store-password -> set the password to use for reading the keystore file.
+* http.server.https.tls-key-password -> set the password to use for reading the tls key from the keystore file.
 * http.server.middleware-packages -> set package names to be scanned for @Middleware.
 * http.server.routing-packages -> set package names to be scanned for @Routing.
 * http.server.exception-handling-packages -> set package names to be scanned for @ExceptionHandling.

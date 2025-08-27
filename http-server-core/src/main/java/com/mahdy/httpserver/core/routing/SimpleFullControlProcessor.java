@@ -8,19 +8,17 @@ import com.mahdy.httpserver.core.model.enumeration.HttpMethod;
 import com.mahdy.httpserver.core.model.enumeration.header.HttpContentType;
 import com.mahdy.httpserver.core.model.request.HttpRequest;
 import com.mahdy.httpserver.core.model.response.HttpResponse;
+import com.mahdy.httpserver.core.util.CommonUtils;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
 public class SimpleFullControlProcessor {
+
+    private final String STATIC_RESOURCE_DIRECTORY = "web/";
 
     @Routing(httpMethod = HttpMethod.GET, path = "/request")
     public void processSimpleGet(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -60,14 +58,9 @@ public class SimpleFullControlProcessor {
     }
 
     private byte[] readStaticResource(String fileName) throws ResourceNotFoundException {
-        URL resource = getClass().getClassLoader().getResource("web/" + fileName);
-        if (resource == null) {
-            throw new ResourceNotFoundException();
-        }
         try {
-            Path path = Paths.get(resource.toURI());
-            return Files.readAllBytes(path);
-        } catch (IOException | URISyntaxException e) {
+            return Files.readAllBytes(CommonUtils.getResourceAsPath(STATIC_RESOURCE_DIRECTORY + fileName));
+        } catch (Exception e) {
             throw new ResourceNotFoundException(e);
         }
     }
