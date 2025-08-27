@@ -3,7 +3,6 @@ package com.mahdy.httpserver.core.server.socket;
 import com.mahdy.httpserver.core.exception.base.ApplicationRuntimeException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -12,7 +11,6 @@ import java.net.Socket;
  * @author Mehdi Kamali
  * @since 27/07/2025
  */
-@Slf4j
 @RequiredArgsConstructor
 public class ServerSocketImpl implements ServerSocket {
 
@@ -28,6 +26,11 @@ public class ServerSocketImpl implements ServerSocket {
         } catch (IOException e) {
             throw new ApplicationRuntimeException(e);
         }
+    }
+
+    @Override
+    public int getLocalPort() {
+        return PORT;
     }
 
     @Override

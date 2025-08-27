@@ -1,4 +1,4 @@
-package com.mahdy.httpserver.starter.spring;
+package com.mahdy.httpserver.sampleclient;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

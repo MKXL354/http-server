@@ -39,4 +39,16 @@ public class ClientSocketImpl implements ClientSocket {
     public void close() throws IOException {
         clientSocket.close();
     }
+
+    @Override
+    public String toString() {
+        if (clientSocket == null) {
+            return "ClientSocketImpl[uninitialized]";
+        }
+
+        return "ClientSocketImpl(" +
+                "remote=" + clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort() +
+                ", local=" + clientSocket.getLocalAddress().getHostAddress() + ":" + clientSocket.getLocalPort() +
+                ")";
+    }
 }

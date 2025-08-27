@@ -1,5 +1,7 @@
 package com.mahdy.httpserver.core.model;
 
+import com.mahdy.httpserver.core.util.CommonUtils;
+
 /**
  * @author Mehdi Kamali
  * @since 27/07/2025
@@ -8,11 +10,14 @@ public class HttpBody {
 
     private byte[] bodyBytes;
 
+    private String bodyString;
+
     public HttpBody(byte[] body) {
         this.bodyBytes = body;
     }
 
     public HttpBody(String body) {
+        this.bodyString = body;
         this.bodyBytes = body.getBytes();
     }
 
@@ -21,7 +26,7 @@ public class HttpBody {
     }
 
     public String getBodyAsString() {
-        return new String(bodyBytes);
+        return bodyString;
     }
 
     public void setBodyAsBytes(byte[] body) {
@@ -29,6 +34,23 @@ public class HttpBody {
     }
 
     public void setBodyAsString(String body) {
-        this.bodyBytes = body.getBytes();
+        this.bodyString = body;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("HttpBody(");
+        boolean stringPresent = false;
+        if (CommonUtils.isNotBlank(bodyString)) {
+            stringPresent = true;
+            stringBuilder.append("text=\"").append(bodyString).append("\"");
+        }
+        if (bodyBytes != null) {
+            if (stringPresent) {
+                stringBuilder.append(", ");
+            }
+            stringBuilder.append("bytesLength=").append(bodyBytes.length);
+        }
+        return stringBuilder.append(")").toString();
     }
 }

@@ -17,6 +17,7 @@
     <modules>
         <module>http-server-core</module>
         <module>http-server-starter-spring</module>
+        <module>http-server-sample-client</module>
     </modules>
 
     <properties>
@@ -36,6 +37,12 @@
             <dependency>
                 <groupId>com.mahdy</groupId>
                 <artifactId>http-server-starter-spring</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mahdy</groupId>
+                <artifactId>http-server-sample-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

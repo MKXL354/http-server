@@ -8,6 +8,8 @@ import java.io.IOException;
  */
 public interface ServerSocket {
 
+    int getLocalPort();
+
     ClientSocket acceptConnection() throws IOException;
 
     void close() throws IOException;

@@ -42,6 +42,7 @@ public class HttpServer {
     }
 
     private void serverLoop() {
+        log.info("starting to accept connection on port {} ...", serverSocket.getLocalPort());
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 ClientSocket clientSocket = serverSocket.acceptConnection();
